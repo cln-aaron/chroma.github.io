@@ -676,6 +676,159 @@
       margin-top: 2rem;
     }
 
+    /* Colour Wheel */
+    .colour-wheel {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 2rem auto;
+    }
+
+    .wheel-node {
+      position: absolute;
+      text-align: center;
+      width: 100px;
+    }
+
+    .wheel-d { top: 0; left: 50%; transform: translateX(-50%); }
+    .wheel-i { top: 50%; right: -20px; transform: translateY(-50%); }
+    .wheel-s { bottom: 0; left: 50%; transform: translateX(-50%); }
+    .wheel-c { top: 50%; left: -20px; transform: translateY(-50%); }
+
+    .wheel-letter {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      display: block;
+      line-height: 1;
+    }
+
+    .wheel-colour {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--ice2);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .wheel-traits {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .wheel-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .wheel-line {
+      position: absolute;
+      background: var(--edge);
+    }
+
+    .wheel-line-di {
+      width: 1px; height: 80px;
+      top: 50px; right: 40px;
+      transform: rotate(-45deg);
+      transform-origin: top center;
+    }
+
+    .wheel-line-dc {
+      width: 1px; height: 80px;
+      top: 50px; left: 40px;
+      transform: rotate(45deg);
+      transform-origin: top center;
+    }
+
+    .wheel-line-is {
+      width: 1px; height: 80px;
+      bottom: 50px; right: 40px;
+      transform: rotate(45deg);
+      transform-origin: bottom center;
+    }
+
+    .wheel-line-cs {
+      width: 1px; height: 80px;
+      bottom: 50px; left: 40px;
+      transform: rotate(-45deg);
+      transform-origin: bottom center;
+    }
+
+    /* Blend cards */
+    .blend-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--edge);
+      border: 1px solid var(--edge);
+      margin: 1.5rem 0;
+    }
+
+    .blend-card {
+      background: var(--navy2);
+      display: flex;
+      gap: 16px;
+      padding: 16px 20px;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .blend-card:hover {
+      background: rgba(42,255,210,0.03);
+    }
+
+    .blend-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .blend-info {
+      flex: 1;
+    }
+
+    .blend-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .blend-types {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .blend-hex {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .blend-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--ice2);
+      margin-top: 4px;
+    }
+
     @media (max-width: 500px) {
       h1 { font-size: 2rem; }
       .question-card { padding: 1.3rem; }
@@ -683,6 +836,7 @@
       .profile-card { padding: 1.5rem 1.2rem; }
       .profile-table td:first-child { width: auto; white-space: normal; }
       .info-card { padding: 1.5rem 1.2rem; }
+      .colour-wheel { width: 240px; height: 240px; }
     }
   </style>
 </head>
@@ -856,6 +1010,119 @@
 
         <div class="profile-nav">
           <button class="nav-btn prev" onclick="backToResults()">Back to Results</button>
+          <button class="btn" onclick="showWheel()">The Colour Wheel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colour Wheel Screen -->
+    <div id="wheel-screen" style="display:none;">
+      <div class="info-card">
+        <div class="info-section-label">The DISC Colour Wheel</div>
+        <h2 class="info-title">Where Do You Sit?</h2>
+
+        <div class="colour-wheel">
+          <div class="wheel-node wheel-d">
+            <span class="wheel-letter" style="color:#E63946;">D</span>
+            <span class="wheel-colour">Red Flame</span>
+            <span class="wheel-traits">Bold &middot; Driven</span>
+          </div>
+          <div class="wheel-line wheel-line-di"></div>
+          <div class="wheel-line wheel-line-dc"></div>
+          <div class="wheel-node wheel-i">
+            <span class="wheel-letter" style="color:#FFD60A;">I</span>
+            <span class="wheel-colour">Solar Yellow</span>
+            <span class="wheel-traits">Expressive &middot; Social</span>
+          </div>
+          <div class="wheel-line wheel-line-is"></div>
+          <div class="wheel-center">DISC</div>
+          <div class="wheel-node wheel-c">
+            <span class="wheel-letter" style="color:#4DA6FF;">C</span>
+            <span class="wheel-colour">Ocean Blue</span>
+            <span class="wheel-traits">Precise &middot; Analytical</span>
+          </div>
+          <div class="wheel-line wheel-line-cs"></div>
+          <div class="wheel-node wheel-s">
+            <span class="wheel-letter" style="color:#52B788;">S</span>
+            <span class="wheel-colour">Sage Green</span>
+            <span class="wheel-traits">Steady &middot; Supportive</span>
+          </div>
+        </div>
+
+        <div class="info-nav" style="justify-content:space-between;">
+          <button class="nav-btn prev" onclick="backToProfile()">Back to Profile</button>
+          <button class="btn" onclick="showBlends()">Blended Profiles</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blended Profiles Screen -->
+    <div id="blend-screen" style="display:none;">
+      <div class="info-card">
+        <div class="info-section-label">Blended Profiles</div>
+        <h2 class="info-title">Your Colour is a Blend</h2>
+
+        <p class="info-text">Most people are a <strong>blend</strong> of 2 primary styles. These blended colours help you see the nuance in your personality:</p>
+
+        <div class="blend-grid">
+          <div class="blend-card">
+            <div class="blend-swatch" style="background:#F4845F;"></div>
+            <div class="blend-info">
+              <div class="blend-name">Orange Spark</div>
+              <div class="blend-types">D + I</div>
+              <div class="blend-hex">#F4845F</div>
+              <div class="blend-desc">Bold AND charismatic; natural leaders who inspire through energy</div>
+            </div>
+          </div>
+          <div class="blend-card">
+            <div class="blend-swatch" style="background:#E07A5F;"></div>
+            <div class="blend-info">
+              <div class="blend-name">Warm Coral</div>
+              <div class="blend-types">I + S</div>
+              <div class="blend-hex">#E07A5F</div>
+              <div class="blend-desc">Empathetic AND expressive; the heartbeat of any team</div>
+            </div>
+          </div>
+          <div class="blend-card">
+            <div class="blend-swatch" style="background:#3D8B8B;"></div>
+            <div class="blend-info">
+              <div class="blend-name">Teal Sage</div>
+              <div class="blend-types">S + C</div>
+              <div class="blend-hex">#3D8B8B</div>
+              <div class="blend-desc">Thoughtful AND supportive; quiet excellence</div>
+            </div>
+          </div>
+          <div class="blend-card">
+            <div class="blend-swatch" style="background:#2D6A8C;"></div>
+            <div class="blend-info">
+              <div class="blend-name">Steel Blue</div>
+              <div class="blend-types">C + D</div>
+              <div class="blend-hex">#2D6A8C</div>
+              <div class="blend-desc">Precise AND decisive; built to solve hard problems</div>
+            </div>
+          </div>
+          <div class="blend-card">
+            <div class="blend-swatch" style="background:#4361EE;"></div>
+            <div class="blend-info">
+              <div class="blend-name">Indigo Drive</div>
+              <div class="blend-types">D + C</div>
+              <div class="blend-hex">#4361EE</div>
+              <div class="blend-desc">Strategic AND demanding; high standards, high results</div>
+            </div>
+          </div>
+          <div class="blend-card">
+            <div class="blend-swatch" style="background:#7B2D8B;"></div>
+            <div class="blend-info">
+              <div class="blend-name">Violet</div>
+              <div class="blend-types">I + C</div>
+              <div class="blend-hex">#7B2D8B</div>
+              <div class="blend-desc">Creative AND analytical; rare and powerful combo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-nav" style="justify-content:space-between;">
+          <button class="nav-btn prev" onclick="backToWheel()">Back</button>
           <button class="btn" onclick="restartQuiz()">Take It Again</button>
         </div>
       </div>
@@ -1422,11 +1689,37 @@ function backToResults() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function showWheel() {
+  document.getElementById('profile-screen').style.display = 'none';
+  document.getElementById('wheel-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToProfile() {
+  document.getElementById('wheel-screen').style.display = 'none';
+  document.getElementById('profile-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showBlends() {
+  document.getElementById('wheel-screen').style.display = 'none';
+  document.getElementById('blend-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToWheel() {
+  document.getElementById('blend-screen').style.display = 'none';
+  document.getElementById('wheel-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function restartQuiz() {
   current = 0;
   answers.fill(null);
   document.getElementById('results-screen').style.display = 'none';
   document.getElementById('profile-screen').style.display = 'none';
+  document.getElementById('wheel-screen').style.display = 'none';
+  document.getElementById('blend-screen').style.display = 'none';
   document.getElementById('start-screen').classList.remove('hidden');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
