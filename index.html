@@ -4,53 +4,111 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chroma - Colour Personality Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --navy: #04080F;
+      --navy2: #080D18;
+      --panel: #101D35;
+      --edge: #1A2D50;
+      --ice: #C8D8F0;
+      --ice2: #8FA8CC;
+      --accent: #2AFFD2;
+      --accent2: #00B8F5;
+      --white: #F0F6FF;
+      --muted: #4A6080;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #f0f0f0;
+      font-family: 'Syne', sans-serif;
+      background: var(--navy);
+      color: var(--ice);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
+
+    /* Grid overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(42,255,210,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42,255,210,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .container {
       max-width: 700px;
       width: 100%;
+      position: relative;
+      z-index: 1;
     }
+
+    /* Logo area */
+    .logo-area {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-svg { width: 64px; height: 64px; margin-bottom: 12px; }
 
     h1 {
       text-align: center;
-      font-size: 2.4rem;
-      margin-bottom: 0.3rem;
-      background: linear-gradient(90deg, #e74c3c, #f1c40f, #2ecc71, #3498db);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.6rem;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
     }
 
     .subtitle {
       text-align: center;
-      font-size: 1rem;
-      color: #aaa;
-      margin-bottom: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Scan line */
+    .scan-line {
+      position: fixed; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(42,255,210,0.35), transparent);
+      animation: scan 6s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes scan {
+      0%   { top: 0; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
     }
 
     /* Start screen */
     #start-screen {
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 2rem 1rem;
     }
 
     #start-screen p {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: #ccc;
-      margin-bottom: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--ice2);
+      margin-bottom: 2.5rem;
       max-width: 520px;
       margin-left: auto;
       margin-right: auto;
@@ -58,53 +116,73 @@
 
     .btn {
       display: inline-block;
-      padding: 0.9rem 2.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
+      padding: 14px 40px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       border: none;
-      border-radius: 50px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      color: #fff;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: var(--navy);
+      background: var(--accent);
+      transition: opacity 0.2s, transform 0.2s;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
     }
 
     .btn:hover {
+      opacity: 0.85;
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
 
     /* Progress bar */
     .progress-wrap {
-      background: rgba(255,255,255,0.1);
-      border-radius: 20px;
-      height: 10px;
+      background: var(--edge);
+      height: 3px;
       margin-bottom: 1.5rem;
       overflow: hidden;
     }
 
     .progress-bar {
       height: 100%;
-      border-radius: 20px;
-      background: linear-gradient(90deg, #667eea, #764ba2);
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
       transition: width 0.4s ease;
       width: 0%;
     }
 
     .question-counter {
       text-align: center;
-      font-size: 0.9rem;
-      color: #999;
-      margin-bottom: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
     }
 
     /* Question card */
     .question-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      background: var(--navy2);
+      border: 1px solid var(--edge);
       padding: 2rem;
+      position: relative;
       animation: fadeIn 0.3s ease;
+    }
+
+    .question-card::before {
+      content: '';
+      position: absolute; top: -1px; left: -1px;
+      width: 24px; height: 24px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+    }
+
+    .question-card::after {
+      content: '';
+      position: absolute; bottom: -1px; right: -1px;
+      width: 24px; height: 24px;
+      border-bottom: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
     }
 
     @keyframes fadeIn {
@@ -113,41 +191,43 @@
     }
 
     .question-text {
-      font-size: 1.15rem;
-      line-height: 1.6;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.7;
       margin-bottom: 1.5rem;
-      color: #e8e8e8;
+      color: var(--white);
     }
 
     .options {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.6rem;
     }
 
     .option-btn {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
-      padding: 1rem 1.2rem;
+      background: rgba(42,255,210,0.03);
+      border: 1px solid var(--edge);
+      padding: 14px 18px;
       text-align: left;
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #ddd;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--ice2);
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .option-btn:hover {
-      background: rgba(102, 126, 234, 0.15);
-      border-color: rgba(102, 126, 234, 0.5);
-      color: #fff;
+      background: rgba(42,255,210,0.08);
+      border-color: rgba(42,255,210,0.4);
+      color: var(--white);
     }
 
     .option-btn.selected {
-      background: rgba(102, 126, 234, 0.25);
-      border-color: #667eea;
-      color: #fff;
+      background: rgba(42,255,210,0.12);
+      border-color: var(--accent);
+      color: var(--white);
     }
 
     /* Navigation */
@@ -158,90 +238,140 @@
     }
 
     .nav-btn {
-      padding: 0.7rem 1.8rem;
-      font-size: 0.95rem;
-      font-weight: 600;
+      padding: 10px 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       border: none;
-      border-radius: 50px;
       cursor: pointer;
-      color: #fff;
+      color: var(--white);
       transition: transform 0.2s, opacity 0.2s;
     }
 
     .nav-btn:disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       cursor: not-allowed;
     }
 
-    .nav-btn.prev { background: rgba(255,255,255,0.12); }
-    .nav-btn.prev:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
-    .nav-btn.next { background: linear-gradient(135deg, #667eea, #764ba2); }
-    .nav-btn.next:hover:not(:disabled) { transform: translateY(-2px); }
+    .nav-btn.prev {
+      background: transparent;
+      border: 1px solid var(--edge);
+      color: var(--ice2);
+    }
+    .nav-btn.prev:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+
+    .nav-btn.next {
+      background: var(--accent);
+      color: var(--navy);
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    }
+    .nav-btn.next:hover:not(:disabled) { opacity: 0.85; transform: translateY(-2px); }
 
     /* Results */
     #results-screen { display: none; }
 
     .results-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 2rem;
+      background: var(--navy2);
+      border: 1px solid var(--edge);
+      padding: 2.5rem 2rem;
       text-align: center;
       animation: fadeIn 0.4s ease;
+      position: relative;
+    }
+
+    .results-card::before {
+      content: '';
+      position: absolute; top: -1px; left: -1px;
+      width: 24px; height: 24px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+    }
+
+    .results-card::after {
+      content: '';
+      position: absolute; bottom: -1px; right: -1px;
+      width: 24px; height: 24px;
+      border-bottom: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
     }
 
     .results-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
       font-size: 1.8rem;
-      margin-bottom: 1.5rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .results-subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
     }
 
     .scores {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 2px;
+      background: var(--edge);
+      border: 1px solid var(--edge);
       margin-bottom: 2rem;
     }
 
     .score-tile {
-      border-radius: 14px;
       padding: 1.5rem 1rem;
       text-align: center;
     }
 
     .score-tile .letter {
-      font-size: 2.2rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
       font-weight: 800;
       display: block;
     }
 
     .score-tile .label {
-      font-size: 0.85rem;
-      opacity: 0.85;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.7;
       margin-top: 0.2rem;
       display: block;
     }
 
     .score-tile .count {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-top: 0.4rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-top: 0.5rem;
       display: block;
     }
 
-    .tile-D { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-    .tile-I { background: linear-gradient(135deg, #f39c12, #e67e22); }
-    .tile-S { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-    .tile-C { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .tile-D { background: var(--navy2); color: #FF6B6B; }
+    .tile-D .letter, .tile-D .count { color: #FF6B6B; }
+    .tile-I { background: var(--navy2); color: #FFD93D; }
+    .tile-I .letter, .tile-I .count { color: #FFD93D; }
+    .tile-S { background: var(--navy2); color: #2AFFD2; }
+    .tile-S .letter, .tile-S .count { color: #2AFFD2; }
+    .tile-C { background: var(--navy2); color: #00B8F5; }
+    .tile-C .letter, .tile-C .count { color: #00B8F5; }
 
     .dominant {
-      font-size: 1.1rem;
-      color: #ccc;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      color: var(--ice2);
       margin-bottom: 1.5rem;
-      line-height: 1.6;
+      line-height: 1.9;
     }
 
     .dominant strong {
-      color: #fff;
+      color: var(--white);
     }
 
     .restart-btn {
@@ -252,16 +382,27 @@
     .hidden { display: none !important; }
 
     @media (max-width: 500px) {
-      h1 { font-size: 1.8rem; }
+      h1 { font-size: 2rem; }
       .question-card { padding: 1.3rem; }
-      .scores { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+      .scores { grid-template-columns: 1fr 1fr; gap: 2px; }
     }
   </style>
 </head>
 <body>
+  <div class="scan-line"></div>
   <div class="container">
-    <h1>Chroma</h1>
-    <p class="subtitle">Colour Personality Test</p>
+    <div class="logo-area">
+      <svg class="logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="32,4 58,18 58,46 32,60 6,46 6,18" stroke="#2AFFD2" stroke-width="1.5" fill="none"/>
+        <polygon points="32,14 48,23 48,41 32,50 16,41 16,23" stroke="#00B8F5" stroke-width="1" fill="none" opacity="0.6"/>
+        <circle cx="32" cy="32" r="6" fill="none" stroke="#2AFFD2" stroke-width="1.5"/>
+        <line x1="32" y1="26" x2="32" y2="4" stroke="#2AFFD2" stroke-width="0.8" opacity="0.4"/>
+        <line x1="37.2" y1="35" x2="58" y2="46" stroke="#2AFFD2" stroke-width="0.8" opacity="0.4"/>
+        <line x1="26.8" y1="35" x2="6" y2="46" stroke="#2AFFD2" stroke-width="0.8" opacity="0.4"/>
+      </svg>
+      <h1>Chroma</h1>
+      <p class="subtitle">Colour Personality Engine</p>
+    </div>
 
     <!-- Start Screen -->
     <div id="start-screen">
@@ -292,6 +433,7 @@
     <div id="results-screen">
       <div class="results-card">
         <h2>Your Results</h2>
+        <p class="results-subtitle">Personality Profile Analysis</p>
         <div class="scores">
           <div class="score-tile tile-D">
             <span class="letter">D</span>
