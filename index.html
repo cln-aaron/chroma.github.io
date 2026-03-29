@@ -378,6 +378,176 @@
       margin-top: 1rem;
     }
 
+    /* Profile detail screen */
+    #profile-screen { display: none; }
+
+    .profile-card {
+      background: var(--navy2);
+      border: 1px solid var(--edge);
+      padding: 2.5rem 2rem;
+      animation: fadeIn 0.4s ease;
+      position: relative;
+    }
+
+    .profile-card::before {
+      content: '';
+      position: absolute; top: -1px; left: -1px;
+      width: 24px; height: 24px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+    }
+
+    .profile-card::after {
+      content: '';
+      position: absolute; bottom: -1px; right: -1px;
+      width: 24px; height: 24px;
+      border-bottom: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
+    }
+
+    .profile-color-bar {
+      height: 4px;
+      margin-bottom: 2rem;
+    }
+
+    .profile-type-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .profile-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .profile-colour-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-hex {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border: 1px solid var(--edge);
+      color: var(--ice2);
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-section-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .profile-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 1.9;
+      color: var(--ice2);
+      margin-bottom: 1rem;
+    }
+
+    .profile-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+
+    .profile-table td {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--edge);
+      vertical-align: top;
+    }
+
+    .profile-table td:first-child {
+      color: var(--white);
+      font-weight: 500;
+      white-space: nowrap;
+      width: 140px;
+    }
+
+    .profile-table td:last-child {
+      color: var(--ice2);
+    }
+
+    .profile-famous {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--white);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .profile-team-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--edge);
+      border: 1px solid var(--edge);
+      margin-bottom: 1rem;
+    }
+
+    .profile-team-item {
+      background: var(--navy2);
+      padding: 12px 16px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .profile-team-item span:first-child {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .profile-team-item span:last-child {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--ice2);
+      line-height: 1.7;
+    }
+
+    .profile-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
     /* Hidden utility */
     .hidden { display: none !important; }
 
@@ -385,6 +555,8 @@
       h1 { font-size: 2rem; }
       .question-card { padding: 1.3rem; }
       .scores { grid-template-columns: 1fr 1fr; gap: 2px; }
+      .profile-card { padding: 1.5rem 1.2rem; }
+      .profile-table td:first-child { width: auto; white-space: normal; }
     }
   </style>
 </head>
@@ -473,7 +645,38 @@
           </div>
         </div>
         <p class="dominant" id="dominant-text"></p>
-        <button class="btn restart-btn" onclick="restartQuiz()">Take It Again</button>
+        <button class="btn" onclick="showProfile()" style="margin-top:1rem;">Discover Your Profile</button>
+      </div>
+    </div>
+
+    <!-- Profile Detail Screen -->
+    <div id="profile-screen">
+      <div class="profile-card">
+        <div class="profile-color-bar" id="profile-color-bar"></div>
+        <div class="profile-type-label" id="profile-type-label"></div>
+        <h2 class="profile-title" id="profile-title"></h2>
+        <div class="profile-colour-name" id="profile-colour-name"></div>
+        <span class="profile-hex" id="profile-hex"></span>
+
+        <div class="profile-section-label">Colour Psychology</div>
+        <p class="profile-text" id="profile-psychology"></p>
+
+        <div class="profile-section-label">Core Behavioural Profile</div>
+        <table class="profile-table" id="profile-table"></table>
+
+        <div class="profile-section-label">In the Age of AI</div>
+        <p class="profile-text" id="profile-ai"></p>
+
+        <div class="profile-section-label">Famous Archetypes</div>
+        <p class="profile-famous" id="profile-famous"></p>
+
+        <div class="profile-section-label">In Teams</div>
+        <div class="profile-team-grid" id="profile-teams"></div>
+
+        <div class="profile-nav">
+          <button class="nav-btn prev" onclick="backToResults()">Back to Results</button>
+          <button class="btn" onclick="restartQuiz()">Take It Again</button>
+        </div>
       </div>
     </div>
 
@@ -883,15 +1086,150 @@ function showResults() {
   document.getElementById('dominant-text').innerHTML =
     `Your strongest style is ${dominantNames} with ${max} out of 30.`;
 
+  // Store dominant type for profile page
+  window._dominantType = dominant[0];
+  window._scores = scores;
+
   document.getElementById('quiz-screen').classList.add('hidden');
   document.getElementById('results-screen').style.display = 'block';
+}
+
+// Profile data
+const profiles = {
+  D: {
+    typeName: 'Dominance',
+    colourName: 'Red Flame',
+    hex: '#E63946',
+    psychology: 'Red is universally associated with boldness, urgency, power, and action. Research by Elliot & Maier (2012) in Current Directions in Psychological Science confirms red signals dominance and competitive drive. It activates the amygdala and increases arousal \u2014 reflecting the D-type\'s decisive, fast-moving energy.',
+    table: [
+      ['Primary Drive', 'Results, control, challenge'],
+      ['Motivated By', 'Winning, authority, variety, direct answers'],
+      ['Fears', 'Being taken advantage of, loss of control'],
+      ['Communication', 'Direct, brief, decisive'],
+      ['Under Pressure', 'Becomes demanding, aggressive, impatient'],
+      ['Greatest Strength', 'Gets things done; drives progress'],
+      ['Blind Spot', 'May overlook people\'s feelings; too blunt']
+    ],
+    ai: 'D-types will thrive as orchestrators \u2014 directing AI tools toward goal achievement. Their human edge lies in vision-setting, risk tolerance, and decisive action under ambiguity \u2014 things AI cannot replicate. They must, however, learn to slow down and build genuine relationships.',
+    famous: 'Steve Jobs, Oprah Winfrey (in leadership mode), Cristiano Ronaldo',
+    teams: [
+      ['Strength', 'Pushes for results; breaks through inertia'],
+      ['Challenge', 'May steamroll quieter team members'],
+      ['Best Paired', 'S-type (steadiness) and C-type (accuracy) to balance impulsiveness']
+    ]
+  },
+  I: {
+    typeName: 'Influence',
+    colourName: 'Solar Yellow',
+    hex: '#FFD60A',
+    psychology: 'Yellow is the colour of optimism, energy, and social warmth. Research from the Institute for Color Research shows yellow is the first colour the human eye processes \u2014 reflecting the I-type\'s desire to be noticed and to connect. Yellow evokes creativity, enthusiasm, and positivity \u2014 all hallmarks of the Influence style.',
+    table: [
+      ['Primary Drive', 'Social connection, recognition, enthusiasm'],
+      ['Motivated By', 'Praise, popularity, relationships, fun'],
+      ['Fears', 'Social rejection, being ignored, loss of approval'],
+      ['Communication', 'Expressive, storytelling, engaging, persuasive'],
+      ['Under Pressure', 'Becomes disorganised, overly emotional, impulsive'],
+      ['Greatest Strength', 'Inspires and energises others; builds relationships'],
+      ['Blind Spot', 'May overpromise; avoids conflict and hard truths']
+    ],
+    ai: 'I-types hold the most uniquely human advantage in the AI age. Empathy, charisma, storytelling, and the ability to inspire and motivate are deeply human skills that no AI can authentically replicate. Their challenge is to harness their energy for sustained follow-through.',
+    famous: 'Will Smith, Ellen DeGeneres, BTS (as a collective energy), Richard Branson',
+    teams: [
+      ['Strength', 'Morale-builder; brings energy and creativity'],
+      ['Challenge', 'May lose focus on detail and deadlines'],
+      ['Best Paired', 'C-type (structure) and S-type (support) to ground their ideas']
+    ]
+  },
+  S: {
+    typeName: 'Steadiness',
+    colourName: 'Sage Green',
+    hex: '#52B788',
+    psychology: 'Green evokes stability, harmony, growth, and trust. In colour psychology, green is the easiest colour on the eye and is associated with balance and calm \u2014 directly mirroring the S-type\'s steady, reliable, and supportive nature. Research by Valdez & Mehrabian (1994) links green with feelings of calm and contentment.',
+    table: [
+      ['Primary Drive', 'Stability, harmony, sincere relationships'],
+      ['Motivated By', 'Security, appreciation, consistent environment'],
+      ['Fears', 'Loss of stability, sudden change, conflict'],
+      ['Communication', 'Warm, patient, active listener, non-confrontational'],
+      ['Under Pressure', 'Becomes overly accommodating, indecisive, passive-aggressive'],
+      ['Greatest Strength', 'Creates psychological safety; most loyal team member'],
+      ['Blind Spot', 'Resists necessary change; struggles to say no']
+    ],
+    ai: 'S-types are the emotional anchors of future teams. As organisations integrate AI, the need for empathetic leadership, conflict mediation, and team cohesion grows \u2014 not diminishes. S-types who develop confidence in their voice will be irreplaceable.',
+    famous: 'Mr Rogers, Michelle Obama (in nurturing mode), Mother Teresa',
+    teams: [
+      ['Strength', 'Creates psychological safety; keeps the team together'],
+      ['Challenge', 'May avoid voicing concerns until too late'],
+      ['Best Paired', 'D-type (direction) and I-type (inspiration) to unlock their potential']
+    ]
+  },
+  C: {
+    typeName: 'Conscientiousness',
+    colourName: 'Ocean Blue',
+    hex: '#023E8A',
+    psychology: 'Blue is the colour most associated with trust, intellect, precision, and depth. Research by Mehrabian (1996) shows blue promotes concentration and careful thinking. It is used globally in professional, scientific, and analytical contexts \u2014 perfectly reflecting the C-type\'s standards-driven, methodical approach.',
+    table: [
+      ['Primary Drive', 'Accuracy, quality, competence'],
+      ['Motivated By', 'Standards, logic, research, clear expectations'],
+      ['Fears', 'Criticism of their work, being wrong, irrationality'],
+      ['Communication', 'Precise, questioning, formal, evidence-based'],
+      ['Under Pressure', 'Becomes overly critical, withdrawn, paralysed by perfectionism'],
+      ['Greatest Strength', 'Produces highest-quality work; catches errors others miss'],
+      ['Blind Spot', 'Overthinks; struggles with "good enough"']
+    ],
+    ai: 'C-types are natural AI architects. Their analytical mindset, love of systems thinking, and insistence on accuracy make them exceptional at evaluating AI outputs, identifying biases, and building robust processes. Their human edge: ethical judgment, contextual nuance, and creative problem-framing \u2014 areas where AI still struggles.',
+    famous: 'Albert Einstein, Marie Curie, Bill Gates (in analytical mode)',
+    teams: [
+      ['Strength', 'Sets the quality bar; plans thoroughly'],
+      ['Challenge', 'Analysis paralysis; can slow momentum'],
+      ['Best Paired', 'I-type (enthusiasm) and D-type (decisiveness) to move from planning to action']
+    ]
+  }
+};
+
+function showProfile() {
+  const type = window._dominantType;
+  const p = profiles[type];
+
+  document.getElementById('profile-color-bar').style.background = p.hex;
+  document.getElementById('profile-type-label').textContent = 'Your Dominant Type';
+  document.getElementById('profile-title').textContent = p.typeName;
+  document.getElementById('profile-title').style.color = p.hex === '#023E8A' ? '#4DA6FF' : p.hex;
+  document.getElementById('profile-colour-name').textContent = 'Colour: ' + p.colourName;
+  document.getElementById('profile-colour-name').style.color = p.hex === '#023E8A' ? '#4DA6FF' : p.hex;
+  document.getElementById('profile-hex').textContent = p.hex;
+  document.getElementById('profile-psychology').textContent = p.psychology;
+
+  const tableEl = document.getElementById('profile-table');
+  tableEl.innerHTML = p.table.map(row =>
+    `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`
+  ).join('');
+
+  document.getElementById('profile-ai').textContent = p.ai;
+  document.getElementById('profile-famous').textContent = p.famous;
+
+  const teamsEl = document.getElementById('profile-teams');
+  teamsEl.innerHTML = p.teams.map(row =>
+    `<div class="profile-team-item"><span>${row[0]}</span><span>${row[1]}</span></div>`
+  ).join('');
+
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('profile-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToResults() {
+  document.getElementById('profile-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function restartQuiz() {
   current = 0;
   answers.fill(null);
   document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('profile-screen').style.display = 'none';
   document.getElementById('start-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
