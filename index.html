@@ -404,8 +404,22 @@
       <p class="subtitle">Colour Personality Engine</p>
     </div>
 
+    <!-- Access Code Screen -->
+    <div id="access-screen">
+      <div class="question-card" style="text-align:center;">
+        <p class="question-text" style="margin-bottom:0.5rem;">Enter Access Code</p>
+        <p style="font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:1.5rem;">A valid access code is required to proceed.</p>
+        <input type="text" id="access-input" placeholder="Enter code here" autocomplete="off" spellcheck="false"
+          style="width:100%; padding:14px 18px; background:rgba(42,255,210,0.03); border:1px solid var(--edge); color:var(--white); font-family:'DM Mono',monospace; font-size:14px; letter-spacing:0.08em; text-align:center; text-transform:uppercase; outline:none; transition:border-color 0.2s; margin-bottom:1rem;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--edge)'"
+        >
+        <p id="access-error" style="font-family:'DM Mono',monospace; font-size:12px; color:#FF6B6B; margin-bottom:1rem; display:none;"></p>
+        <button class="btn" onclick="checkAccess()">Enter</button>
+      </div>
+    </div>
+
     <!-- Start Screen -->
-    <div id="start-screen">
+    <div id="start-screen" class="hidden">
       <p>
         In Korea, many people take a personal colour test to discover which colours best match their style and identity. But what if we could also discover our personality colour?
       </p>
@@ -470,6 +484,50 @@
   </div>
 
 <script>
+// Access code validation
+function checkAccess() {
+  const input = document.getElementById('access-input').value.trim().toUpperCase();
+  const errorEl = document.getElementById('access-error');
+
+  // Permanent access code
+  const permanentCode = 'ILOVEAARONANG';
+
+  // Time-windowed access code: valid 29 Mar 2026 00:00 SGT to 2 Apr 2026 19:00 SGT
+  const timedCode = 'DDASBBDKR2026';
+  const timedStart = new Date('2026-03-29T00:00:00+08:00').getTime();
+  const timedEnd   = new Date('2026-04-02T19:00:00+08:00').getTime();
+  const now = Date.now();
+
+  if (input === permanentCode) {
+    grantAccess();
+    return;
+  }
+
+  if (input === timedCode) {
+    if (now >= timedStart && now <= timedEnd) {
+      grantAccess();
+      return;
+    } else {
+      errorEl.textContent = 'This access code has expired or is not yet active.';
+      errorEl.style.display = 'block';
+      return;
+    }
+  }
+
+  errorEl.textContent = 'Invalid access code. Please try again.';
+  errorEl.style.display = 'block';
+}
+
+function grantAccess() {
+  document.getElementById('access-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+
+// Allow Enter key to submit access code
+document.getElementById('access-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkAccess();
+});
+
 const questions = [
   {
     q: "You've just been assigned a group project at school. What do you do first?",
