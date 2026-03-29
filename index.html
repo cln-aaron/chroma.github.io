@@ -1475,7 +1475,10 @@ const answers = new Array(questions.length).fill(null);
 
 function startQuiz() {
   document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('theory1-screen').classList.add('hidden');
+  document.getElementById('theory2-screen').classList.add('hidden');
   document.getElementById('quiz-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   renderQuestion();
 }
 
