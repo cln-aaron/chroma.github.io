@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chroma - Colour Personality Test</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-bottom: 0.3rem;
+      background: linear-gradient(90deg, #e74c3c, #f1c40f, #2ecc71, #3498db);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1rem;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    /* Start screen */
+    #start-screen {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    #start-screen p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #ccc;
+      margin-bottom: 2rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      color: #fff;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      height: 10px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .question-counter {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #999;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Question card */
+    .question-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      color: #e8e8e8;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .option-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #ddd;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: rgba(102, 126, 234, 0.5);
+      color: #fff;
+    }
+
+    .option-btn.selected {
+      background: rgba(102, 126, 234, 0.25);
+      border-color: #667eea;
+      color: #fff;
+    }
+
+    /* Navigation */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+
+    .nav-btn {
+      padding: 0.7rem 1.8rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      color: #fff;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.prev { background: rgba(255,255,255,0.12); }
+    .nav-btn.prev:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+    .nav-btn.next { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .nav-btn.next:hover:not(:disabled) { transform: translateY(-2px); }
+
+    /* Results */
+    #results-screen { display: none; }
+
+    .results-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .results-card h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .scores {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .score-tile {
+      border-radius: 14px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .score-tile .letter {
+      font-size: 2.2rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .score-tile .label {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-top: 0.2rem;
+      display: block;
+    }
+
+    .score-tile .count {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-top: 0.4rem;
+      display: block;
+    }
+
+    .tile-D { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .tile-I { background: linear-gradient(135deg, #f39c12, #e67e22); }
+    .tile-S { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .tile-C { background: linear-gradient(135deg, #3498db, #2980b9); }
+
+    .dominant {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .dominant strong {
+      color: #fff;
+    }
+
+    .restart-btn {
+      margin-top: 1rem;
+    }
+
+    /* Hidden utility */
+    .hidden { display: none !important; }
+
+    @media (max-width: 500px) {
+      h1 { font-size: 1.8rem; }
+      .question-card { padding: 1.3rem; }
+      .scores { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chroma</h1>
+    <p class="subtitle">Colour Personality Test</p>
+
+    <!-- Start Screen -->
+    <div id="start-screen">
+      <p>
+        Answer 30 quick questions to discover your colour personality profile.
+        There are no right or wrong answers &mdash; just pick the option that feels most like you.
+      </p>
+      <button class="btn" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="hidden">
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <p class="question-counter" id="question-counter"></p>
+      <div class="question-card">
+        <p class="question-text" id="question-text"></p>
+        <div class="options" id="options"></div>
+      </div>
+      <div class="nav-row">
+        <button class="nav-btn prev" id="prev-btn" onclick="prevQuestion()">Back</button>
+        <button class="nav-btn next" id="next-btn" onclick="nextQuestion()">Next</button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen">
+      <div class="results-card">
+        <h2>Your Results</h2>
+        <div class="scores">
+          <div class="score-tile tile-D">
+            <span class="letter">D</span>
+            <span class="label">Dominance</span>
+            <span class="count" id="score-D">0</span>
+          </div>
+          <div class="score-tile tile-I">
+            <span class="letter">I</span>
+            <span class="label">Influence</span>
+            <span class="count" id="score-I">0</span>
+          </div>
+          <div class="score-tile tile-S">
+            <span class="letter">S</span>
+            <span class="label">Steadiness</span>
+            <span class="count" id="score-S">0</span>
+          </div>
+          <div class="score-tile tile-C">
+            <span class="letter">C</span>
+            <span class="label">Conscientiousness</span>
+            <span class="count" id="score-C">0</span>
+          </div>
+        </div>
+        <p class="dominant" id="dominant-text"></p>
+        <button class="btn restart-btn" onclick="restartQuiz()">Take It Again</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const questions = [
+  {
+    q: "You've just been assigned a group project at school. What do you do first?",
+    opts: [
+      { text: "Jump in and take charge \u2014 assign roles and set a deadline immediately.", type: "D" },
+      { text: "Get everyone excited about the project \u2014 brainstorm ideas together and make it fun.", type: "I" },
+      { text: "Ask everyone what they're comfortable doing, making sure no one feels left out.", type: "S" },
+      { text: "Research the topic thoroughly before the first meeting so you know what you're talking about.", type: "C" }
+    ]
+  },
+  {
+    q: "Your group is stuck and can't agree on a direction. How do you respond?",
+    opts: [
+      { text: "Step in and make a call \u2014 someone has to decide, and waiting is wasting time.", type: "D" },
+      { text: "Try to get everyone energised about a new idea \u2014 if they're excited, they'll move forward.", type: "I" },
+      { text: "Find common ground by listening to everyone's concerns and suggest a compromise.", type: "S" },
+      { text: "Propose that the group evaluates each option using clear criteria before deciding.", type: "C" }
+    ]
+  },
+  {
+    q: "You receive unexpected critical feedback on work you submitted. What's your reaction?",
+    opts: [
+      { text: "Feel frustrated but push back if you think the criticism is unfair or vague.", type: "D" },
+      { text: "Feel hurt initially \u2014 you care about what people think \u2014 but quickly bounce back.", type: "I" },
+      { text: "Take it quietly to heart. You wonder if you've let the group down.", type: "S" },
+      { text: "Analyse the feedback carefully to understand what specifically went wrong.", type: "C" }
+    ]
+  },
+  {
+    q: "It's lunchtime at school. Where do you most likely end up?",
+    opts: [
+      { text: "Wherever something is happening \u2014 a debate, a sports match, some drama to resolve.", type: "D" },
+      { text: "In the middle of a big group, making everyone laugh and keeping the energy up.", type: "I" },
+      { text: "With your close friends, having a genuine one-on-one conversation.", type: "S" },
+      { text: "Reading, researching something you're curious about, or doing something independently.", type: "C" }
+    ]
+  },
+  {
+    q: "You're given the chance to present your project to the whole school. How do you feel?",
+    opts: [
+      { text: "Confident \u2014 this is your chance to lead and show what you've achieved.", type: "D" },
+      { text: "Thrilled \u2014 you love being on stage and making an impression.", type: "I" },
+      { text: "Nervous, but willing \u2014 you'll do it if it helps the team.", type: "S" },
+      { text: "Anxious but prepared \u2014 you'll only do it once you've practised enough to be sure of your facts.", type: "C" }
+    ]
+  },
+  {
+    q: "A new student joins your class and seems shy. What do you do?",
+    opts: [
+      { text: "You notice them but expect they'll find their way \u2014 you don't like to interfere.", type: "D" },
+      { text: "You immediately go over, introduce yourself, and invite them to join your group.", type: "I" },
+      { text: "You quietly make sure they're included and check in on them throughout the day.", type: "S" },
+      { text: "You observe first and only approach once you've figured out what they might need.", type: "C" }
+    ]
+  },
+  {
+    q: "Your team is close to the deadline and one member hasn't completed their section. What do you do?",
+    opts: [
+      { text: "Confront them directly \u2014 tell them they need to deliver or you'll reassign their part.", type: "D" },
+      { text: "Motivate them \u2014 remind them how great the final product is going to be.", type: "I" },
+      { text: "Offer to help them finish \u2014 you'd rather do more work than let the team down.", type: "S" },
+      { text: "Review what they have so far and figure out the most efficient way to complete it correctly.", type: "C" }
+    ]
+  },
+  {
+    q: "What kind of school assignment do you enjoy most?",
+    opts: [
+      { text: "A debate, pitch, or leadership challenge \u2014 something where you get to compete and win.", type: "D" },
+      { text: "A creative performance, short film, or presentation \u2014 something you can make your own.", type: "I" },
+      { text: "A collaborative group project where everyone contributes and the team succeeds together.", type: "S" },
+      { text: "A deep research paper or logic-based problem set \u2014 something with a right answer you can find.", type: "C" }
+    ]
+  },
+  {
+    q: "An AI tool gives you a confident answer that you suspect might be wrong. What do you do?",
+    opts: [
+      { text: "Ignore the concern \u2014 if it's mostly right, it's good enough to move forward with.", type: "D" },
+      { text: "Share the answer with others and see if anyone picks up on the issue.", type: "I" },
+      { text: "Hesitate to question it \u2014 what if you're the one who's wrong?", type: "S" },
+      { text: "Fact-check it against multiple reliable sources before using or sharing it.", type: "C" }
+    ]
+  },
+  {
+    q: "You're playing a game with friends. Which role do you naturally take?",
+    opts: [
+      { text: "The strategist \u2014 you're thinking three moves ahead and trying to win.", type: "D" },
+      { text: "The entertainer \u2014 you keep the mood light and make sure everyone's having fun.", type: "I" },
+      { text: "The mediator \u2014 you make sure no one gets left out or takes things too seriously.", type: "S" },
+      { text: "The analyst \u2014 you understand the rules better than anyone and play precisely.", type: "C" }
+    ]
+  },
+  {
+    q: "How do your closest friends describe you?",
+    opts: [
+      { text: "Confident, direct, and always has a plan.", type: "D" },
+      { text: "Energetic, fun, and the life of the party.", type: "I" },
+      { text: "Kind, dependable, and always there when you need them.", type: "S" },
+      { text: "Thoughtful, intelligent, and detail-oriented.", type: "C" }
+    ]
+  },
+  {
+    q: "Your school asks you to improve the canteen experience for students. Your first step is:",
+    opts: [
+      { text: "Identify the top 3 biggest problems and immediately propose solutions to the principal.", type: "D" },
+      { text: "Run a fun survey and get students hyped about the possibility of change.", type: "I" },
+      { text: "Ask students what small changes would make them feel most comfortable and heard.", type: "S" },
+      { text: "Collect data on current usage, peak times, pricing, and student feedback before acting.", type: "C" }
+    ]
+  },
+  {
+    q: "You disagree with a teacher's decision. What do you do?",
+    opts: [
+      { text: "Speak up then and there \u2014 you're not afraid to challenge authority if you think you're right.", type: "D" },
+      { text: "Talk to classmates first to see if others feel the same, then approach the teacher as a group.", type: "I" },
+      { text: "Say nothing in the moment \u2014 you don't want to cause tension \u2014 but quietly tell a friend.", type: "S" },
+      { text: "Write down your reasoning carefully and request a private meeting to present your case logically.", type: "C" }
+    ]
+  },
+  {
+    q: 'What does "success" look like to you?',
+    opts: [
+      { text: "Achieving a goal you set, being recognised as the best at something.", type: "D" },
+      { text: "Being surrounded by people who love what you're doing and want to be part of it.", type: "I" },
+      { text: "Making a positive difference in someone's life and being genuinely appreciated.", type: "S" },
+      { text: "Mastering a skill, producing something flawless, or solving a complex problem.", type: "C" }
+    ]
+  },
+  {
+    q: "You and a friend are planning a trip together. Who makes the decisions?",
+    opts: [
+      { text: "You do most of it \u2014 you have a vision and you move fast.", type: "D" },
+      { text: "It's a collaborative adventure \u2014 you make joint decisions, but you bring the excitement.", type: "I" },
+      { text: "You let your friend lead \u2014 as long as everyone's happy, you're happy too.", type: "S" },
+      { text: "You research every option thoroughly \u2014 hotels, transport, weather, costs \u2014 before deciding anything.", type: "C" }
+    ]
+  },
+  {
+    q: "In a debate, what role do you naturally play?",
+    opts: [
+      { text: "The assertive closer \u2014 you make the winning argument with confidence.", type: "D" },
+      { text: "The crowd-pleaser \u2014 you tell stories and use humour to win people over.", type: "I" },
+      { text: "The bridge-builder \u2014 you acknowledge both sides and try to find truth in the middle.", type: "S" },
+      { text: "The logician \u2014 you dismantle the opponent's argument with facts and evidence.", type: "C" }
+    ]
+  },
+  {
+    q: "How do you react when plans suddenly change?",
+    opts: [
+      { text: "Fine with it \u2014 as long as the new direction still gets results.", type: "D" },
+      { text: "Excited \u2014 spontaneity is fun; you adapt quickly and enjoy the change.", type: "I" },
+      { text: "Unsettled \u2014 you prefer to know what's happening so you can be ready.", type: "S" },
+      { text: "Frustrated \u2014 you had a clear system in place and the change disrupts your process.", type: "C" }
+    ]
+  },
+  {
+    q: "A team member takes credit for your idea in front of others. You:",
+    opts: [
+      { text: "Correct the record immediately and clearly \u2014 no one takes credit for your work.", type: "D" },
+      { text: "Feel annoyed but let it go to avoid drama \u2014 you'll remember this, though.", type: "I" },
+      { text: "Say nothing \u2014 confronting it would just create conflict, and that's worse.", type: "S" },
+      { text: "Document what happened and decide later whether to address it with evidence.", type: "C" }
+    ]
+  },
+  {
+    q: "What's your biggest fear in a team project?",
+    opts: [
+      { text: "That the team will be too slow or too indecisive to actually finish.", type: "D" },
+      { text: "That the team will lose enthusiasm and become boring and flat.", type: "I" },
+      { text: "That someone will be left out or that the team will fall apart from conflict.", type: "S" },
+      { text: "That the final output will be low quality or factually incorrect.", type: "C" }
+    ]
+  },
+  {
+    q: "You're starting a new Instagram page for your school club. Your instinct is to:",
+    opts: [
+      { text: "Launch it fast, set a posting schedule, and track which posts perform best.", type: "D" },
+      { text: "Focus on making content that's personality-driven, funny, and shareable.", type: "I" },
+      { text: "Make sure every post reflects the whole club and that everyone feels represented.", type: "S" },
+      { text: "Research what similar clubs do, find a consistent aesthetic, and plan a content calendar.", type: "C" }
+    ]
+  },
+  {
+    q: "When you work with AI tools (like ChatGPT or Claude), you use them:",
+    opts: [
+      { text: "To speed up outcomes \u2014 you tell it what you want, review quickly, and move on.", type: "D" },
+      { text: "To brainstorm and generate creative ideas you can remix into something exciting.", type: "I" },
+      { text: "To help you structure your thoughts \u2014 but you always personalise the output carefully.", type: "S" },
+      { text: "To do initial research \u2014 but you always verify the information it gives you.", type: "C" }
+    ]
+  },
+  {
+    q: "How do you make big decisions?",
+    opts: [
+      { text: "Quickly \u2014 you trust your gut and don't need all the information to act.", type: "D" },
+      { text: "By talking it through with people you trust \u2014 you value their energy and input.", type: "I" },
+      { text: "Slowly and carefully \u2014 you need to feel sure that everyone affected will be okay.", type: "S" },
+      { text: "By mapping out pros and cons, researching thoroughly, and reviewing all data.", type: "C" }
+    ]
+  },
+  {
+    q: "You've just failed a test you thought you'd do well in. What do you do next?",
+    opts: [
+      { text: "Figure out immediately what went wrong and attack the next opportunity harder.", type: "D" },
+      { text: "Vent to a friend or post something funny about it \u2014 humour is your coping mechanism.", type: "I" },
+      { text: "Feel sad and wonder if you've let people down, but quietly push on.", type: "S" },
+      { text: "Review every question you got wrong and find the exact gaps in your knowledge.", type: "C" }
+    ]
+  },
+  {
+    q: "What would make you most uncomfortable in a group setting?",
+    opts: [
+      { text: "Being told what to do by someone less competent than you.", type: "D" },
+      { text: "Being ignored or left out of conversations.", type: "I" },
+      { text: "Conflict or tension between members of the group.", type: "S" },
+      { text: "Being asked to make a decision without enough information or time.", type: "C" }
+    ]
+  },
+  {
+    q: "Which of the following sentences feels most like you?",
+    opts: [
+      { text: "\u201CIf you want something done right, sometimes you just have to do it yourself.\u201D", type: "D" },
+      { text: "\u201CLife's too short not to enjoy the journey with the people around you.\u201D", type: "I" },
+      { text: "\u201CI'd rather take a step back than risk hurting someone in the process.\u201D", type: "S" },
+      { text: "\u201CI don't make a move until I understand the full picture.\u201D", type: "C" }
+    ]
+  },
+  {
+    q: "Your school is organising a charity event. Which role would you naturally gravitate to?",
+    opts: [
+      { text: "Event Director \u2014 you drive the strategy and make sure everything gets done.", type: "D" },
+      { text: "Emcee or Social Media Manager \u2014 you want to be the face of the event.", type: "I" },
+      { text: "Volunteer Coordinator \u2014 you make sure everyone has a role and feels valued.", type: "S" },
+      { text: "Logistics & Finance Lead \u2014 you want to make sure every detail is planned and accounted for.", type: "C" }
+    ]
+  },
+  {
+    q: "What's your communication style when things get stressful?",
+    opts: [
+      { text: "You become more direct and urgent \u2014 there's no time for softness under pressure.", type: "D" },
+      { text: "You reach out more \u2014 you need to talk to people to feel settled.", type: "I" },
+      { text: "You go quiet and try to absorb the stress rather than burden others.", type: "S" },
+      { text: "You become more withdrawn and thorough \u2014 you work it out internally before speaking.", type: "C" }
+    ]
+  },
+  {
+    q: "In an ideal world, what does your future career look like?",
+    opts: [
+      { text: "Running your own company or leading a team \u2014 you want autonomy and impact.", type: "D" },
+      { text: "Working with people in a role that lets you inspire, communicate, or create.", type: "I" },
+      { text: "A meaningful role where you support others and contribute to something greater than yourself.", type: "S" },
+      { text: "A specialised expert role where your knowledge and precision are deeply valued.", type: "C" }
+    ]
+  },
+  {
+    q: "A classmate is going through a hard time. What do you do?",
+    opts: [
+      { text: "Help them identify the problem and come up with a practical plan to fix it.", type: "D" },
+      { text: "Cheer them up \u2014 bring them energy, distract them with something fun.", type: "I" },
+      { text: "Be there quietly \u2014 listen without judgment and let them feel supported.", type: "S" },
+      { text: "Research resources, find relevant information, and give them structured, useful advice.", type: "C" }
+    ]
+  },
+  {
+    q: "Which of the following best describes how you'd want to be remembered at school?",
+    opts: [
+      { text: "\u201CThe one who made things happen and never backed down from a challenge.\u201D", type: "D" },
+      { text: "\u201CThe one who made everyone smile and brought the energy wherever they went.\u201D", type: "I" },
+      { text: "\u201CThe one who was always there \u2014 kind, reliable, and genuinely cared about others.\u201D", type: "S" },
+      { text: "\u201CThe one who knew their stuff, thought deeply, and never cut corners.\u201D", type: "C" }
+    ]
+  }
+];
+
+let current = 0;
+const answers = new Array(questions.length).fill(null);
+
+function startQuiz() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('question-counter').textContent = `Question ${current + 1} of ${questions.length}`;
+  document.getElementById('progress-bar').style.width = ((current + 1) / questions.length * 100) + '%';
+  document.getElementById('question-text').textContent = q.q;
+
+  const optionsEl = document.getElementById('options');
+  optionsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOption(i);
+    optionsEl.appendChild(btn);
+  });
+
+  document.getElementById('prev-btn').disabled = current === 0;
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.textContent = current === questions.length - 1 ? 'See Results' : 'Next';
+  nextBtn.disabled = answers[current] === null;
+}
+
+function selectOption(i) {
+  answers[current] = i;
+  document.getElementById('next-btn').disabled = false;
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, idx) => btn.classList.toggle('selected', idx === i));
+}
+
+function nextQuestion() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion() {
+  if (current > 0) {
+    current--;
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  const scores = { D: 0, I: 0, S: 0, C: 0 };
+  answers.forEach((ans, idx) => {
+    if (ans !== null) {
+      scores[questions[idx].opts[ans].type]++;
+    }
+  });
+
+  document.getElementById('score-D').textContent = scores.D;
+  document.getElementById('score-I').textContent = scores.I;
+  document.getElementById('score-S').textContent = scores.S;
+  document.getElementById('score-C').textContent = scores.C;
+
+  const labels = {
+    D: 'Dominance',
+    I: 'Influence',
+    S: 'Steadiness',
+    C: 'Conscientiousness'
+  };
+
+  const max = Math.max(scores.D, scores.I, scores.S, scores.C);
+  const dominant = Object.keys(scores).filter(k => scores[k] === max);
+  const dominantNames = dominant.map(k => `<strong>${labels[k]} (${k})</strong>`).join(' and ');
+
+  document.getElementById('dominant-text').innerHTML =
+    `Your strongest style is ${dominantNames} with ${max} out of 30.`;
+
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('results-screen').style.display = 'block';
+}
+
+function restartQuiz() {
+  current = 0;
+  answers.fill(null);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
