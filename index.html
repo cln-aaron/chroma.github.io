@@ -551,12 +551,138 @@
     /* Hidden utility */
     .hidden { display: none !important; }
 
+    /* Info pages */
+    .info-card {
+      background: var(--navy2);
+      border: 1px solid var(--edge);
+      padding: 2.5rem 2rem;
+      animation: fadeIn 0.4s ease;
+      position: relative;
+    }
+
+    .info-card::before {
+      content: '';
+      position: absolute; top: -1px; left: -1px;
+      width: 24px; height: 24px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+    }
+
+    .info-card::after {
+      content: '';
+      position: absolute; bottom: -1px; right: -1px;
+      width: 24px; height: 24px;
+      border-bottom: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
+    }
+
+    .info-section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-section-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .info-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .info-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 2;
+      color: var(--ice2);
+      margin-bottom: 1.2rem;
+    }
+
+    .info-text strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .info-text em {
+      color: var(--accent2);
+      font-style: italic;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 1rem 0 1.2rem;
+      padding: 0;
+    }
+
+    .info-list li {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 2;
+      color: var(--ice2);
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .info-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 8px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .info-list li strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .info-highlight {
+      background: rgba(42,255,210,0.03);
+      border-left: 2px solid var(--accent);
+      padding: 16px 20px;
+      margin: 1.2rem 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--ice2);
+    }
+
+    .info-highlight strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .info-nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
     @media (max-width: 500px) {
       h1 { font-size: 2rem; }
       .question-card { padding: 1.3rem; }
       .scores { grid-template-columns: 1fr 1fr; gap: 2px; }
       .profile-card { padding: 1.5rem 1.2rem; }
       .profile-table td:first-child { width: auto; white-space: normal; }
+      .info-card { padding: 1.5rem 1.2rem; }
     }
   </style>
 </head>
@@ -598,7 +724,62 @@
       <p>
         There are no right or wrong answers &mdash; just pick the option that feels most like you.
       </p>
-      <button class="btn" onclick="startQuiz()">Let's Go!</button>
+      <button class="btn" onclick="showTheory1()">Let's Go!</button>
+    </div>
+
+    <!-- Theory Page 1: Origins of DISC -->
+    <div id="theory1-screen" class="hidden">
+      <div class="info-card">
+        <div class="info-section-label">Part 1 &middot; Theoretical Foundation</div>
+        <h2 class="info-title">Origins of DISC</h2>
+
+        <p class="info-text">The DISC model was developed by American psychologist <strong>William Moulton Marston</strong> and introduced in his 1928 book <em>Emotions of Normal People</em>. Marston identified four primary behavioural energies that describe how people respond to their environment:</p>
+
+        <ul class="info-list">
+          <li><strong>Dominance (D)</strong> &mdash; response to problems and challenges</li>
+          <li><strong>Influence (I)</strong> &mdash; response to people and contacts</li>
+          <li><strong>Steadiness (S)</strong> &mdash; response to pace and consistency</li>
+          <li><strong>Conscientiousness (C)</strong> &mdash; response to procedures and constraints</li>
+        </ul>
+
+        <p class="info-text">Unlike clinical psychological tools (e.g., Myers-Briggs Type Indicator or Big Five), DISC is a <strong>behavioural model</strong> &mdash; it focuses on observable patterns of behaviour rather than intrinsic personality traits or cognitive styles. This makes it particularly well-suited for self-awareness in team and leadership contexts.</p>
+
+        <p class="info-text">DISC has been validated in organisational and educational contexts globally. Over <strong>1 million people</strong> take some form of DISC assessment annually, making it one of the most widely used behavioural tools in the world.</p>
+
+        <div class="info-highlight">
+          <strong>Key academic insight:</strong> Research by Marston (1928), and later expanded by industrial psychologists like John Geier (who created the DiSC Profile in the 1970s), confirms that while individuals are a blend of all four styles, most people have <strong>one or two dominant styles</strong> that drive their behavioural preferences.
+        </div>
+
+        <div class="info-nav">
+          <button class="btn" onclick="showTheory2()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theory Page 2: Colour Mapping Framework -->
+    <div id="theory2-screen" class="hidden">
+      <div class="info-card">
+        <div class="info-section-label">Part 1 &middot; Theoretical Foundation</div>
+        <h2 class="info-title">The Colour Mapping Framework</h2>
+
+        <p class="info-text">To align with the <strong>personal colour concept</strong> central to Chroma (inspired by Korean personal colour analysis), each DISC type is assigned a signature colour. These colour assignments are not arbitrary &mdash; they are grounded in <strong>colour psychology research</strong> and the emotional/behavioural properties of each colour.</p>
+
+        <ul class="info-list">
+          <li><strong style="color:#E63946;">D &mdash; Red Flame</strong> &mdash; Boldness, urgency, power, and action</li>
+          <li><strong style="color:#FFD60A;">I &mdash; Solar Yellow</strong> &mdash; Optimism, energy, and social warmth</li>
+          <li><strong style="color:#52B788;">S &mdash; Sage Green</strong> &mdash; Stability, harmony, growth, and trust</li>
+          <li><strong style="color:#4DA6FF;">C &mdash; Ocean Blue</strong> &mdash; Trust, intellect, precision, and depth</li>
+        </ul>
+
+        <div class="info-highlight">
+          These colour-behaviour pairings are supported by decades of colour psychology research, from Elliot &amp; Maier (2012) on red-dominance signalling to Valdez &amp; Mehrabian (1994) on green-calm associations. Your colour result is not just a label &mdash; it reflects a deep connection between how you behave and how colour communicates emotion.
+        </div>
+
+        <div class="info-nav" style="justify-content:space-between;">
+          <button class="nav-btn prev" onclick="backToTheory1()">Back</button>
+          <button class="btn" onclick="startQuiz()">Begin the Quiz</button>
+        </div>
+      </div>
     </div>
 
     <!-- Quiz Screen -->
@@ -724,6 +905,24 @@ function checkAccess() {
 function grantAccess() {
   document.getElementById('access-screen').classList.add('hidden');
   document.getElementById('start-screen').classList.remove('hidden');
+}
+
+function showTheory1() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('theory1-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showTheory2() {
+  document.getElementById('theory1-screen').classList.add('hidden');
+  document.getElementById('theory2-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToTheory1() {
+  document.getElementById('theory2-screen').classList.add('hidden');
+  document.getElementById('theory1-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Allow Enter key to submit access code
