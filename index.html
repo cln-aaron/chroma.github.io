@@ -1141,8 +1141,8 @@ function checkAccess() {
   const input = document.getElementById('access-input').value.trim().toUpperCase();
   const errorEl = document.getElementById('access-error');
 
-  // Permanent access code
-  const permanentCode = 'ILOVEAARONANG';
+  // Permanent access codes
+  const permanentCodes = ['ILOVEAARONANG', 'VIBETHLETE'];
 
   // Time-windowed access code: valid 29 Mar 2026 00:00 SGT to 2 Apr 2026 19:00 SGT
   const timedCode = 'DDASBBDKR2026';
@@ -1150,7 +1150,7 @@ function checkAccess() {
   const timedEnd   = new Date('2026-04-02T19:00:00+08:00').getTime();
   const now = Date.now();
 
-  if (input === permanentCode) {
+  if (permanentCodes.includes(input)) {
     grantAccess();
     return;
   }
