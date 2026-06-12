@@ -1142,28 +1142,11 @@ function checkAccess() {
   const errorEl = document.getElementById('access-error');
 
   // Permanent access codes
-  const permanentCodes = ['ILOVEAARONANG', 'VIBETHLETE'];
-
-  // Time-windowed access code: valid 29 Mar 2026 00:00 SGT to 2 Apr 2026 19:00 SGT
-  const timedCode = 'DDASBBDKR2026';
-  const timedStart = new Date('2026-03-29T00:00:00+08:00').getTime();
-  const timedEnd   = new Date('2026-04-02T19:00:00+08:00').getTime();
-  const now = Date.now();
+  const permanentCodes = ['VIBETHLETE'];
 
   if (permanentCodes.includes(input)) {
     grantAccess();
     return;
-  }
-
-  if (input === timedCode) {
-    if (now >= timedStart && now <= timedEnd) {
-      grantAccess();
-      return;
-    } else {
-      errorEl.textContent = 'This access code has expired or is not yet active.';
-      errorEl.style.display = 'block';
-      return;
-    }
   }
 
   errorEl.textContent = 'Invalid access code. Please try again.';
