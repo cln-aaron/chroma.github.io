@@ -1,2 +1,1 @@
-# chroma.github.io
-Chroma - Colour Personality Test
+Chroma x Hesed Emet Advisory - Colour Personality Engine
