@@ -1141,11 +1141,19 @@ function checkAccess() {
   const input = document.getElementById('access-input').value.trim().toUpperCase();
   const errorEl = document.getElementById('access-error');
 
-  // Permanent access codes
-  const permanentCodes = ['VIBETHLETE'];
+  // Time-windowed access code: valid until 5 July 2026 23:59 SGT
+  const timedCode = 'YOUTHDAY2026';
+  const timedEnd = new Date('2026-07-05T23:59:59+08:00').getTime();
+  const now = Date.now();
 
-  if (permanentCodes.includes(input)) {
+  if (input === timedCode && now <= timedEnd) {
     grantAccess();
+    return;
+  }
+
+  if (input === timedCode && now > timedEnd) {
+    errorEl.textContent = 'This access code has expired.';
+    errorEl.style.display = 'block';
     return;
   }
 
@@ -1363,7 +1371,7 @@ const questions = [
     ]
   },
   {
-    q: "When you work with AI tools (like ChatGPT or Claude), you use them:",
+    q: "When you work with AI tools, you tend to use them:",
     opts: [
       { text: "To speed up outcomes \u2014 you tell it what you want, review quickly, and move on.", type: "D" },
       { text: "To brainstorm and generate creative ideas you can remix into something exciting.", type: "I" },
@@ -1451,11 +1459,113 @@ const questions = [
       { text: "\u201CThe one who was always there \u2014 kind, reliable, and genuinely cared about others.\u201D", type: "S" },
       { text: "\u201CThe one who knew their stuff, thought deeply, and never cut corners.\u201D", type: "C" }
     ]
+  },
+  // --- INTERACTIVE CHALLENGES (31-40) ---
+  {
+    q: "SPEED ROUND: You have 8 seconds! A fire alarm goes off during an exam. What do you do FIRST?",
+    challenge: "timed", timeLimit: 8,
+    opts: [
+      { text: "Stand up and lead everyone to the exit", type: "D" },
+      { text: "Crack a joke to keep people calm as you head out", type: "I" },
+      { text: "Help the person next to you gather their things", type: "S" },
+      { text: "Check if it's a real alarm or a drill before moving", type: "C" }
+    ]
+  },
+  {
+    q: "INSTINCT CHECK: Pick the emoji that draws your eye FIRST. Don't overthink it.",
+    challenge: "instinct",
+    opts: [
+      { text: "\u26A1 Lightning Bolt", type: "D" },
+      { text: "\u2728 Sparkles", type: "I" },
+      { text: "\u1F331 Seedling", type: "S" },
+      { text: "\u1F9E9 Puzzle Piece", type: "C" }
+    ]
+  },
+  {
+    q: "PRIORITY CHALLENGE: You have ONE hour before a big presentation. Rank what you'd do first:",
+    challenge: "priority",
+    opts: [
+      { text: "Rehearse your delivery and opening line", type: "D" },
+      { text: "Add some humour and personal stories to your slides", type: "I" },
+      { text: "Check in with your teammates to make sure everyone's ready", type: "S" },
+      { text: "Fact-check every statistic and fix formatting errors", type: "C" }
+    ]
+  },
+  {
+    q: "SPEED ROUND: You have 6 seconds! You find a wallet on the ground with $500 in it. What's your FIRST thought?",
+    challenge: "timed", timeLimit: 6,
+    opts: [
+      { text: "Find the owner fast \u2014 take charge of the situation", type: "D" },
+      { text: "Post about it on social media to find the owner", type: "I" },
+      { text: "Hand it to the nearest authority and hope it gets returned", type: "S" },
+      { text: "Check the ID, look up the person, and contact them directly", type: "C" }
+    ]
+  },
+  {
+    q: "SCENARIO CHALLENGE: Your team's app crashes 10 minutes before a demo to investors. What's your move?",
+    challenge: "scenario",
+    opts: [
+      { text: "Take over \u2014 switch to a backup plan and present confidently anyway", type: "D" },
+      { text: "Charm the investors with a story while someone fixes it behind the scenes", type: "I" },
+      { text: "Stay calm, reassure the team, and suggest everyone takes a breath first", type: "S" },
+      { text: "Diagnose the exact error, fix the root cause, even if it means delaying", type: "C" }
+    ]
+  },
+  {
+    q: "WORD ASSOCIATION: Which word JUMPS out at you first?",
+    challenge: "instinct",
+    opts: [
+      { text: "CONQUER", type: "D" },
+      { text: "CELEBRATE", type: "I" },
+      { text: "PROTECT", type: "S" },
+      { text: "ANALYSE", type: "C" }
+    ]
+  },
+  {
+    q: "SPEED ROUND: You have 7 seconds! You're lost in a foreign city with a dead phone. What do you do?",
+    challenge: "timed", timeLimit: 7,
+    opts: [
+      { text: "Walk confidently in a direction \u2014 you'll figure it out", type: "D" },
+      { text: "Approach a friendly-looking stranger and ask for help with a smile", type: "I" },
+      { text: "Find a familiar landmark and wait somewhere safe", type: "S" },
+      { text: "Look for a map, street signs, or a transit station with a directory", type: "C" }
+    ]
+  },
+  {
+    q: "DILEMMA: You can only save ONE project from deletion. Which do you keep?",
+    challenge: "scenario",
+    opts: [
+      { text: "The one that was the most ambitious and had the biggest impact", type: "D" },
+      { text: "The one that was the most creative and got the best audience reaction", type: "I" },
+      { text: "The one your team worked on together and everyone felt proud of", type: "S" },
+      { text: "The one that was technically perfect and took the most research", type: "C" }
+    ]
+  },
+  {
+    q: "SPEED ROUND: You have 5 seconds! Pick a superpower. GO!",
+    challenge: "timed", timeLimit: 5,
+    opts: [
+      { text: "Super strength", type: "D" },
+      { text: "Shape-shifting", type: "I" },
+      { text: "Healing others", type: "S" },
+      { text: "Time manipulation", type: "C" }
+    ]
+  },
+  {
+    q: "FINAL CHALLENGE: A robot asks you to describe humanity in ONE word. You say:",
+    challenge: "instinct",
+    opts: [
+      { text: "Resilience", type: "D" },
+      { text: "Connection", type: "I" },
+      { text: "Kindness", type: "S" },
+      { text: "Curiosity", type: "C" }
+    ]
   }
 ];
 
 let current = 0;
 const answers = new Array(questions.length).fill(null);
+let timerInterval = null;
 
 function startQuiz() {
   document.getElementById('start-screen').classList.add('hidden');
@@ -1467,10 +1577,27 @@ function startQuiz() {
 }
 
 function renderQuestion() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  const timerEl = document.getElementById('timer-bar');
+  if (timerEl) timerEl.remove();
+
   const q = questions[current];
-  document.getElementById('question-counter').textContent = `Question ${current + 1} of ${questions.length}`;
-  document.getElementById('progress-bar').style.width = ((current + 1) / questions.length * 100) + '%';
-  document.getElementById('question-text').textContent = q.q;
+  const total = questions.length;
+  document.getElementById('question-counter').textContent = `Question ${current + 1} of ${total}`;
+  document.getElementById('progress-bar').style.width = ((current + 1) / total * 100) + '%';
+
+  const qTextEl = document.getElementById('question-text');
+  qTextEl.textContent = q.q;
+
+  if (q.challenge === 'timed') {
+    qTextEl.style.color = '#FF6B6B';
+  } else if (q.challenge === 'instinct') {
+    qTextEl.style.color = '#FFD60A';
+  } else if (q.challenge === 'scenario' || q.challenge === 'priority') {
+    qTextEl.style.color = '#2AFFD2';
+  } else {
+    qTextEl.style.color = '';
+  }
 
   const optionsEl = document.getElementById('options');
   optionsEl.innerHTML = '';
@@ -1479,8 +1606,38 @@ function renderQuestion() {
     btn.className = 'option-btn' + (answers[current] === i ? ' selected' : '');
     btn.textContent = opt.text;
     btn.onclick = () => selectOption(i);
+    if (q.challenge === 'instinct') {
+      btn.style.fontSize = '1.1rem';
+      btn.style.textAlign = 'center';
+    }
     optionsEl.appendChild(btn);
   });
+
+  // Timed challenge: show countdown bar
+  if (q.challenge === 'timed' && answers[current] === null) {
+    const bar = document.createElement('div');
+    bar.id = 'timer-bar';
+    bar.style.cssText = 'height:4px;background:#FF6B6B;margin-bottom:1rem;transition:width 0.1s linear;width:100%;';
+    const card = document.querySelector('.question-card');
+    card.insertBefore(bar, card.firstChild);
+
+    let remaining = q.timeLimit * 10;
+    const total = remaining;
+    timerInterval = setInterval(() => {
+      remaining--;
+      bar.style.width = (remaining / total * 100) + '%';
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        bar.style.background = 'var(--muted)';
+        if (answers[current] === null) {
+          // Auto-select random if time runs out
+          const rand = Math.floor(Math.random() * q.opts.length);
+          selectOption(rand);
+        }
+      }
+    }, 100);
+  }
 
   document.getElementById('prev-btn').disabled = current === 0;
   const nextBtn = document.getElementById('next-btn');
@@ -1490,6 +1647,9 @@ function renderQuestion() {
 
 function selectOption(i) {
   answers[current] = i;
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  const timerEl = document.getElementById('timer-bar');
+  if (timerEl) timerEl.style.background = 'var(--accent)';
   document.getElementById('next-btn').disabled = false;
   const btns = document.querySelectorAll('.option-btn');
   btns.forEach((btn, idx) => btn.classList.toggle('selected', idx === i));
@@ -1537,7 +1697,7 @@ function showResults() {
   const dominantNames = dominant.map(k => `<strong>${labels[k]} (${k})</strong>`).join(' and ');
 
   document.getElementById('dominant-text').innerHTML =
-    `Your strongest style is ${dominantNames} with ${max} out of 30.`;
+    `Your strongest style is ${dominantNames} with ${max} out of ${questions.length}.`;
 
   // Store dominant type for profile page
   window._dominantType = dominant[0];
