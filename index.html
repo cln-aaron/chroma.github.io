@@ -906,6 +906,7 @@
       color: var(--accent);
       margin-top: 6px;
     }
+    .menu-card-youth .menu-card-cta { color: var(--muted); }
     .menu-card-advocacy .menu-card-cta { color: #FF4ECD; }
 
     /* ===== YOUTH ADVOCACY BRIGHT THEME ===== */
@@ -981,21 +982,26 @@
     </div>
 
     <!-- Access Code Screen -->
-    <div id="access-screen">
+    <div id="access-screen" class="hidden">
       <div class="question-card" style="text-align:center;">
-        <p class="question-text" style="margin-bottom:0.5rem;">Enter Access Code</p>
-        <p style="font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:1.5rem;">A valid access code is required to proceed.</p>
-        <input type="text" id="access-input" placeholder="Enter code here" autocomplete="off" spellcheck="false"
-          style="width:100%; padding:14px 18px; background:rgba(42,255,210,0.03); border:1px solid var(--edge); color:var(--white); font-family:'DM Mono',monospace; font-size:14px; letter-spacing:0.08em; text-align:center; text-transform:uppercase; outline:none; transition:border-color 0.2s; margin-bottom:1rem;"
-          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--edge)'"
-        >
-        <p id="access-error" style="font-family:'DM Mono',monospace; font-size:12px; color:#FF6B6B; margin-bottom:1rem; display:none;"></p>
-        <button class="btn" onclick="checkAccess()">Enter</button>
+        <p class="question-text" id="access-title" style="margin-bottom:0.5rem;">Enter Access Code</p>
+        <p id="access-subtext" style="font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:1.5rem;">A valid access code is required to proceed.</p>
+        <div id="access-form">
+          <input type="text" id="access-input" placeholder="Enter code here" autocomplete="off" spellcheck="false"
+            style="width:100%; padding:14px 18px; background:rgba(42,255,210,0.03); border:1px solid var(--edge); color:var(--white); font-family:'DM Mono',monospace; font-size:14px; letter-spacing:0.08em; text-align:center; text-transform:uppercase; outline:none; transition:border-color 0.2s; margin-bottom:1rem;"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--edge)'"
+          >
+          <button class="btn" onclick="checkAccess()">Enter</button>
+        </div>
+        <p id="access-error" style="font-family:'DM Mono',monospace; font-size:12px; color:#FF6B6B; margin:1rem 0; display:none;"></p>
+        <div style="margin-top:1.2rem;">
+          <button class="nav-btn prev" onclick="backToMenu()">Back to Menu</button>
+        </div>
       </div>
     </div>
 
     <!-- Menu / Edition Selection Screen -->
-    <div id="menu-screen" class="hidden">
+    <div id="menu-screen">
       <p style="text-align:center; font-family:'DM Mono',monospace; font-size:13px; color:var(--ice2); margin-bottom:1.8rem; line-height:1.9;">
         Choose your experience.
       </p>
@@ -1004,7 +1010,7 @@
           <span class="menu-card-tag">Edition 01</span>
           <span class="menu-card-title">Youth Edition</span>
           <span class="menu-card-desc">Discover your personality colour &mdash; inspired by Korean personal colour analysis. Perfect for self-discovery and everyday life.</span>
-          <span class="menu-card-cta">Start &rarr;</span>
+          <span class="menu-card-cta">&#128274; Locked</span>
         </button>
         <button class="menu-card menu-card-advocacy" onclick="selectEdition('advocacy')">
           <span class="menu-card-tag">Edition 02</span>
@@ -1286,24 +1292,60 @@
   </div>
 
 <script>
-// Access code validation
+// Per-edition access control
+const editionAccess = {
+  // Youth Edition: locked until further notice
+  youth: { code: 'YOUTHDAY2026', expiry: new Date('2026-07-05T23:59:59+08:00').getTime(), locked: true },
+  // Youth Advocacy: code SEASAT2026, never expires
+  advocacy: { code: 'SEASAT2026', expiry: null, locked: false }
+};
+
+function showAccessGate(ed) {
+  const acc = editionAccess[ed];
+  const name = (ed === 'advocacy') ? 'Youth Advocacy' : 'Youth Edition';
+  const sub = document.getElementById('access-subtext');
+  const form = document.getElementById('access-form');
+  const errorEl = document.getElementById('access-error');
+  const input = document.getElementById('access-input');
+
+  input.value = '';
+  errorEl.style.display = 'none';
+
+  if (acc.locked) {
+    sub.innerHTML = 'The <strong>' + name + '</strong> edition is currently locked.';
+    form.style.display = 'none';
+    errorEl.textContent = 'This edition is locked. Please check back later.';
+    errorEl.style.display = 'block';
+  } else {
+    sub.innerHTML = 'Enter the access code for the <strong>' + name + '</strong> edition.';
+    form.style.display = 'block';
+  }
+
+  document.getElementById('menu-screen').classList.add('hidden');
+  document.getElementById('access-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function checkAccess() {
-  const input = document.getElementById('access-input').value.trim().toUpperCase();
+  const acc = editionAccess[edition];
   const errorEl = document.getElementById('access-error');
 
-  // Time-windowed access code: valid until 5 July 2026 23:59 SGT
-  const timedCode = 'YOUTHDAY2026';
-  const timedEnd = new Date('2026-07-05T23:59:59+08:00').getTime();
-  const now = Date.now();
-
-  if (input === timedCode && now <= timedEnd) {
-    grantAccess();
+  if (acc.locked) {
+    errorEl.textContent = 'This edition is locked. Please check back later.';
+    errorEl.style.display = 'block';
     return;
   }
 
-  if (input === timedCode && now > timedEnd) {
-    errorEl.textContent = 'This access code has expired.';
-    errorEl.style.display = 'block';
+  const input = document.getElementById('access-input').value.trim().toUpperCase();
+  const now = Date.now();
+
+  if (input === acc.code) {
+    if (acc.expiry && now > acc.expiry) {
+      errorEl.textContent = 'This access code has expired.';
+      errorEl.style.display = 'block';
+      return;
+    }
+    grantAccess();
     return;
   }
 
@@ -1313,7 +1355,8 @@ function checkAccess() {
 
 function grantAccess() {
   document.getElementById('access-screen').classList.add('hidden');
-  document.getElementById('menu-screen').classList.remove('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showTheory1() {
@@ -2122,18 +2165,20 @@ function selectEdition(ed) {
       '<p>There are no right or wrong answers &mdash; just pick the option that feels most like you.</p>';
   }
 
-  document.getElementById('menu-screen').classList.add('hidden');
-  document.getElementById('start-screen').classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Go to the access gate for this edition (menu is shown first, before the code)
+  showAccessGate(ed);
 }
 
 function backToMenu() {
   ['results-screen','profile-screen','wheel-screen','blend-screen'].forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
-  ['start-screen','theory1-screen','theory2-screen','quiz-screen'].forEach(id => {
+  ['start-screen','theory1-screen','theory2-screen','quiz-screen','access-screen'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
+  // Reset to the neutral default theme for the menu
+  document.body.classList.remove('advocacy');
+  document.querySelector('.logo-area .subtitle').textContent = 'Colour Personality Engine';
   document.getElementById('menu-screen').classList.remove('hidden');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -2370,9 +2415,101 @@ const profiles = {
   }
 };
 
+// Advocacy-flavoured profiles (Youth Advocacy edition)
+const profilesAdvocacy = {
+  D: {
+    typeName: 'Dominance',
+    colourName: 'Red Flame',
+    hex: '#E63946',
+    psychology: "In advocacy, red is the colour of urgency and courage. D-type advocates are the change-drivers — they set bold goals, confront injustice head-on, and refuse to wait for permission. Research links red with dominance and decisive action (Elliot & Maier, 2012), mirroring the D-type advocate's fearless push for results.",
+    table: [
+      ['Primary Drive', 'Winning real change; taking the lead'],
+      ['Motivated By', 'Impact, autonomy, bold goals, momentum'],
+      ['Fears', 'Powerlessness, being ignored, slow progress'],
+      ['Communication', 'Direct, urgent, unafraid to challenge power'],
+      ['Under Pressure', 'Becomes forceful and impatient; may steamroll allies'],
+      ['Greatest Strength', 'Drives campaigns forward; breaks through inertia'],
+      ['Blind Spot', 'May burn out others or skip consensus-building']
+    ],
+    ai: 'D-type advocates lead as campaign orchestrators — using AI to move faster while keeping humans in charge of the vision. Their edge: courage, decisiveness, and the will to act on incomplete information. Their growth: slowing down to bring people with them.',
+    famous: 'Nelson Mandela, Greta Thunberg, Martin Luther King Jr.',
+    teams: [
+      ['Strength', 'Sets direction; rallies people to act'],
+      ['Challenge', 'May dominate quieter voices in the coalition'],
+      ['Best Paired', 'S-type organisers and C-type strategists to stay grounded']
+    ]
+  },
+  I: {
+    typeName: 'Influence',
+    colourName: 'Solar Yellow',
+    hex: '#FFD60A',
+    psychology: "Yellow is the colour of energy and belonging. I-type advocates are the movement-builders — they inspire crowds, tell the stories that spread, and turn strangers into allies. Yellow is the first colour the human eye processes, mirroring the I-type advocate's gift for being seen and drawing people in.",
+    table: [
+      ['Primary Drive', 'Inspiring people; building a movement'],
+      ['Motivated By', 'Connection, recognition, shared energy, hope'],
+      ['Fears', 'Being unheard, isolation, a cause losing momentum'],
+      ['Communication', 'Expressive, story-driven, persuasive, warm'],
+      ['Under Pressure', 'Becomes scattered; over-promises; avoids hard truths'],
+      ['Greatest Strength', 'Mobilises people; makes causes spread'],
+      ['Blind Spot', 'May chase attention over follow-through']
+    ],
+    ai: 'I-type advocates hold the most human advantage in the AI age. Authentic storytelling, charisma, and the power to move a crowd cannot be faked by a machine. Their growth: pairing their spark with the discipline to see campaigns through.',
+    famous: 'Barack Obama, Malala Yousafzai, Jacinda Ardern',
+    teams: [
+      ['Strength', 'Energises the coalition; recruits and unites allies'],
+      ['Challenge', 'May lose focus on detail and deadlines'],
+      ['Best Paired', 'C-type planners and S-type organisers to ground the vision']
+    ]
+  },
+  S: {
+    typeName: 'Steadiness',
+    colourName: 'Sage Green',
+    hex: '#52B788',
+    psychology: "Green is the colour of trust and community. S-type advocates are the grassroots anchors — they listen first, protect the vulnerable, and hold coalitions together when things get hard. Green is the easiest colour on the eye and signals calm (Valdez & Mehrabian, 1994), mirroring the S-type advocate's steady, people-first presence.",
+    table: [
+      ['Primary Drive', 'Serving communities; keeping people together'],
+      ['Motivated By', 'Belonging, trust, fairness, lasting relationships'],
+      ['Fears', 'Conflict, people being left behind, sudden upheaval'],
+      ['Communication', 'Warm, patient, deeply attentive, non-confrontational'],
+      ['Under Pressure', 'Over-accommodates; goes quiet; avoids needed conflict'],
+      ['Greatest Strength', 'Builds trust; the loyal backbone of any movement'],
+      ['Blind Spot', 'May avoid hard conversations until too late']
+    ],
+    ai: 'S-type advocates are the emotional anchors of movements. As AI spreads, the need for empathy, mediation, and genuine community trust only grows. Their growth: finding the confidence to speak up and lead from the front when it matters.',
+    famous: 'Mahatma Gandhi, Desmond Tutu, Mother Teresa',
+    teams: [
+      ['Strength', 'Creates safety and trust; keeps the coalition united'],
+      ['Challenge', 'May hold back concerns to avoid friction'],
+      ['Best Paired', 'D-type drivers and I-type connectors to amplify their impact']
+    ]
+  },
+  C: {
+    typeName: 'Conscientiousness',
+    colourName: 'Ocean Blue',
+    hex: '#023E8A',
+    psychology: "Blue is the colour of credibility and depth. C-type advocates are the evidence-builders — they research the issue, write the policy, and make the case that stands up to scrutiny. Blue promotes careful thinking (Mehrabian, 1996) and signals trust, mirroring the C-type advocate's rigorous, principled approach.",
+    table: [
+      ['Primary Drive', 'Getting it right; building an airtight case'],
+      ['Motivated By', 'Evidence, standards, justice done properly'],
+      ['Fears', 'Being wrong, misinformation, sloppy advocacy'],
+      ['Communication', 'Precise, evidence-based, measured, principled'],
+      ['Under Pressure', 'Becomes critical and withdrawn; stuck in analysis'],
+      ['Greatest Strength', 'Builds the credibility the whole movement rests on'],
+      ['Blind Spot', 'May over-analyse and slow urgent action']
+    ],
+    ai: 'C-type advocates are natural AI architects — they excel at fact-checking outputs, spotting bias, and building rigorous cases. Their human edge: ethical judgment and framing the right questions. Their growth: acting before certainty when a cause cannot wait.',
+    famous: 'Wangari Maathai, Ruth Bader Ginsburg, Kofi Annan',
+    teams: [
+      ['Strength', 'Sets the standard; builds the evidence base'],
+      ['Challenge', 'Analysis can slow the coalition down'],
+      ['Best Paired', 'I-type connectors and D-type drivers to turn plans into action']
+    ]
+  }
+};
+
 function showProfile() {
   const type = window._dominantType;
-  const p = profiles[type];
+  const p = (edition === 'advocacy' ? profilesAdvocacy : profiles)[type];
 
   document.getElementById('profile-color-bar').style.background = p.hex;
   document.getElementById('profile-type-label').textContent = 'Your Dominant Type';
