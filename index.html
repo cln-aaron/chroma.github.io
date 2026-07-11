@@ -829,6 +829,129 @@
       margin-top: 4px;
     }
 
+    /* ===== MENU / EDITION SELECTION ===== */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .menu-card {
+      text-align: left;
+      background: var(--navy2);
+      border: 1px solid var(--edge);
+      padding: 28px 24px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      font-family: 'Syne', sans-serif;
+    }
+
+    .menu-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .menu-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .menu-card:hover::before { transform: scaleX(1); }
+
+    .menu-card-advocacy::before {
+      background: linear-gradient(90deg, #FF4ECD, #FFB800, #4DE1FF);
+    }
+    .menu-card-advocacy:hover { border-color: #FF4ECD; box-shadow: 0 10px 30px rgba(255,78,205,0.15); }
+
+    .menu-card-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .menu-card-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .menu-card-advocacy .menu-card-title {
+      background: linear-gradient(90deg, #FF4ECD, #FFB800);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .menu-card-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--ice2);
+      flex-grow: 1;
+    }
+
+    .menu-card-cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+    .menu-card-advocacy .menu-card-cta { color: #FF4ECD; }
+
+    /* ===== YOUTH ADVOCACY BRIGHT THEME ===== */
+    body.advocacy {
+      --navy2: rgba(35,12,60,0.55);
+      --panel: rgba(50,18,85,0.6);
+      --edge: rgba(255,120,210,0.35);
+      --ice: #FFF2FB;
+      --ice2: #FFC8EE;
+      --accent: #FFE14D;
+      --accent2: #4DE1FF;
+      --white: #FFFFFF;
+      --muted: #D69BE8;
+      background:
+        linear-gradient(135deg, #7A00E6 0%, #C400C4 30%, #FF2D8B 60%, #FF7A3D 100%);
+      background-attachment: fixed;
+    }
+
+    body.advocacy::before {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    }
+
+    body.advocacy .scan-line {
+      background: linear-gradient(90deg, transparent, rgba(255,225,77,0.6), transparent);
+    }
+
+    body.advocacy h1 {
+      background: linear-gradient(90deg, #FFE14D, #4DE1FF, #FF4ECD);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #FFE14D;
+    }
+
+    body.advocacy .btn {
+      background: linear-gradient(135deg, #FFE14D, #FF7A3D);
+      color: #3A0060;
+    }
+
+    body.advocacy .option-btn.selected {
+      background: rgba(255,225,77,0.18);
+      border-color: var(--accent);
+    }
+
     @media (max-width: 500px) {
       h1 { font-size: 2rem; }
       .question-card { padding: 1.3rem; }
@@ -837,6 +960,7 @@
       .profile-table td:first-child { width: auto; white-space: normal; }
       .info-card { padding: 1.5rem 1.2rem; }
       .colour-wheel { width: 240px; height: 240px; }
+      .menu-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -870,15 +994,41 @@
       </div>
     </div>
 
+    <!-- Menu / Edition Selection Screen -->
+    <div id="menu-screen" class="hidden">
+      <p style="text-align:center; font-family:'DM Mono',monospace; font-size:13px; color:var(--ice2); margin-bottom:1.8rem; line-height:1.9;">
+        Choose your experience.
+      </p>
+      <div class="menu-grid">
+        <button class="menu-card menu-card-youth" onclick="selectEdition('youth')">
+          <span class="menu-card-tag">Edition 01</span>
+          <span class="menu-card-title">Youth Edition</span>
+          <span class="menu-card-desc">Discover your personality colour &mdash; inspired by Korean personal colour analysis. Perfect for self-discovery and everyday life.</span>
+          <span class="menu-card-cta">Start &rarr;</span>
+        </button>
+        <button class="menu-card menu-card-advocacy" onclick="selectEdition('advocacy')">
+          <span class="menu-card-tag">Edition 02</span>
+          <span class="menu-card-title">Youth Advocacy</span>
+          <span class="menu-card-desc">For ASEAN youth leaders &mdash; find your advocacy style for leadership and coalition building. Workshop 1: bottom-up approach.</span>
+          <span class="menu-card-cta">Start &rarr;</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Start Screen -->
     <div id="start-screen" class="hidden">
-      <p>
-        In Korea, many people take a personal colour test to discover which colours best match their style and identity. But what if we could also discover our personality colour?
-      </p>
-      <p>
-        There are no right or wrong answers &mdash; just pick the option that feels most like you.
-      </p>
-      <button class="btn" onclick="showTheory1()">Let's Go!</button>
+      <div id="start-intro">
+        <p>
+          In Korea, many people take a personal colour test to discover which colours best match their style and identity. But what if we could also discover our personality colour?
+        </p>
+        <p>
+          There are no right or wrong answers &mdash; just pick the option that feels most like you.
+        </p>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap;">
+        <button class="nav-btn prev" onclick="backToMenu()">Back to Menu</button>
+        <button class="btn" onclick="showTheory1()">Let's Go!</button>
+      </div>
     </div>
 
     <!-- Theory Page 1: Origins of DISC -->
@@ -1163,7 +1313,7 @@ function checkAccess() {
 
 function grantAccess() {
   document.getElementById('access-screen').classList.add('hidden');
-  document.getElementById('start-screen').classList.remove('hidden');
+  document.getElementById('menu-screen').classList.remove('hidden');
 }
 
 function showTheory1() {
@@ -1189,12 +1339,12 @@ document.getElementById('access-input').addEventListener('keydown', function(e) 
   if (e.key === 'Enter') checkAccess();
 });
 
-const questions = [
+const questionsYouth = [
   {
     q: "You've just been assigned a group project at school. What do you do first?",
     opts: [
-      { text: "Jump in and take charge \u2014 assign roles and set a deadline immediately.", type: "D" },
-      { text: "Get everyone excited about the project \u2014 brainstorm ideas together and make it fun.", type: "I" },
+      { text: "Jump in and take charge — assign roles and set a deadline immediately.", type: "D" },
+      { text: "Get everyone excited about the project — brainstorm ideas together and make it fun.", type: "I" },
       { text: "Ask everyone what they're comfortable doing, making sure no one feels left out.", type: "S" },
       { text: "Research the topic thoroughly before the first meeting so you know what you're talking about.", type: "C" }
     ]
@@ -1202,8 +1352,8 @@ const questions = [
   {
     q: "Your group is stuck and can't agree on a direction. How do you respond?",
     opts: [
-      { text: "Step in and make a call \u2014 someone has to decide, and waiting is wasting time.", type: "D" },
-      { text: "Try to get everyone energised about a new idea \u2014 if they're excited, they'll move forward.", type: "I" },
+      { text: "Step in and make a call — someone has to decide, and waiting is wasting time.", type: "D" },
+      { text: "Try to get everyone energised about a new idea — if they're excited, they'll move forward.", type: "I" },
       { text: "Find common ground by listening to everyone's concerns and suggest a compromise.", type: "S" },
       { text: "Propose that the group evaluates each option using clear criteria before deciding.", type: "C" }
     ]
@@ -1212,7 +1362,7 @@ const questions = [
     q: "You receive unexpected critical feedback on work you submitted. What's your reaction?",
     opts: [
       { text: "Feel frustrated but push back if you think the criticism is unfair or vague.", type: "D" },
-      { text: "Feel hurt initially \u2014 you care about what people think \u2014 but quickly bounce back.", type: "I" },
+      { text: "Feel hurt initially — you care about what people think — but quickly bounce back.", type: "I" },
       { text: "Take it quietly to heart. You wonder if you've let the group down.", type: "S" },
       { text: "Analyse the feedback carefully to understand what specifically went wrong.", type: "C" }
     ]
@@ -1220,7 +1370,7 @@ const questions = [
   {
     q: "It's lunchtime at school. Where do you most likely end up?",
     opts: [
-      { text: "Wherever something is happening \u2014 a debate, a sports match, some drama to resolve.", type: "D" },
+      { text: "Wherever something is happening — a debate, a sports match, some drama to resolve.", type: "D" },
       { text: "In the middle of a big group, making everyone laugh and keeping the energy up.", type: "I" },
       { text: "With your close friends, having a genuine one-on-one conversation.", type: "S" },
       { text: "Reading, researching something you're curious about, or doing something independently.", type: "C" }
@@ -1229,16 +1379,16 @@ const questions = [
   {
     q: "You're given the chance to present your project to the whole school. How do you feel?",
     opts: [
-      { text: "Confident \u2014 this is your chance to lead and show what you've achieved.", type: "D" },
-      { text: "Thrilled \u2014 you love being on stage and making an impression.", type: "I" },
-      { text: "Nervous, but willing \u2014 you'll do it if it helps the team.", type: "S" },
-      { text: "Anxious but prepared \u2014 you'll only do it once you've practised enough to be sure of your facts.", type: "C" }
+      { text: "Confident — this is your chance to lead and show what you've achieved.", type: "D" },
+      { text: "Thrilled — you love being on stage and making an impression.", type: "I" },
+      { text: "Nervous, but willing — you'll do it if it helps the team.", type: "S" },
+      { text: "Anxious but prepared — you'll only do it once you've practised enough to be sure of your facts.", type: "C" }
     ]
   },
   {
     q: "A new student joins your class and seems shy. What do you do?",
     opts: [
-      { text: "You notice them but expect they'll find their way \u2014 you don't like to interfere.", type: "D" },
+      { text: "You notice them but expect they'll find their way — you don't like to interfere.", type: "D" },
       { text: "You immediately go over, introduce yourself, and invite them to join your group.", type: "I" },
       { text: "You quietly make sure they're included and check in on them throughout the day.", type: "S" },
       { text: "You observe first and only approach once you've figured out what they might need.", type: "C" }
@@ -1247,37 +1397,37 @@ const questions = [
   {
     q: "Your team is close to the deadline and one member hasn't completed their section. What do you do?",
     opts: [
-      { text: "Confront them directly \u2014 tell them they need to deliver or you'll reassign their part.", type: "D" },
-      { text: "Motivate them \u2014 remind them how great the final product is going to be.", type: "I" },
-      { text: "Offer to help them finish \u2014 you'd rather do more work than let the team down.", type: "S" },
+      { text: "Confront them directly — tell them they need to deliver or you'll reassign their part.", type: "D" },
+      { text: "Motivate them — remind them how great the final product is going to be.", type: "I" },
+      { text: "Offer to help them finish — you'd rather do more work than let the team down.", type: "S" },
       { text: "Review what they have so far and figure out the most efficient way to complete it correctly.", type: "C" }
     ]
   },
   {
     q: "What kind of school assignment do you enjoy most?",
     opts: [
-      { text: "A debate, pitch, or leadership challenge \u2014 something where you get to compete and win.", type: "D" },
-      { text: "A creative performance, short film, or presentation \u2014 something you can make your own.", type: "I" },
+      { text: "A debate, pitch, or leadership challenge — something where you get to compete and win.", type: "D" },
+      { text: "A creative performance, short film, or presentation — something you can make your own.", type: "I" },
       { text: "A collaborative group project where everyone contributes and the team succeeds together.", type: "S" },
-      { text: "A deep research paper or logic-based problem set \u2014 something with a right answer you can find.", type: "C" }
+      { text: "A deep research paper or logic-based problem set — something with a right answer you can find.", type: "C" }
     ]
   },
   {
     q: "An AI tool gives you a confident answer that you suspect might be wrong. What do you do?",
     opts: [
-      { text: "Ignore the concern \u2014 if it's mostly right, it's good enough to move forward with.", type: "D" },
+      { text: "Ignore the concern — if it's mostly right, it's good enough to move forward with.", type: "D" },
       { text: "Share the answer with others and see if anyone picks up on the issue.", type: "I" },
-      { text: "Hesitate to question it \u2014 what if you're the one who's wrong?", type: "S" },
+      { text: "Hesitate to question it — what if you're the one who's wrong?", type: "S" },
       { text: "Fact-check it against multiple reliable sources before using or sharing it.", type: "C" }
     ]
   },
   {
     q: "You're playing a game with friends. Which role do you naturally take?",
     opts: [
-      { text: "The strategist \u2014 you're thinking three moves ahead and trying to win.", type: "D" },
-      { text: "The entertainer \u2014 you keep the mood light and make sure everyone's having fun.", type: "I" },
-      { text: "The mediator \u2014 you make sure no one gets left out or takes things too seriously.", type: "S" },
-      { text: "The analyst \u2014 you understand the rules better than anyone and play precisely.", type: "C" }
+      { text: "The strategist — you're thinking three moves ahead and trying to win.", type: "D" },
+      { text: "The entertainer — you keep the mood light and make sure everyone's having fun.", type: "I" },
+      { text: "The mediator — you make sure no one gets left out or takes things too seriously.", type: "S" },
+      { text: "The analyst — you understand the rules better than anyone and play precisely.", type: "C" }
     ]
   },
   {
@@ -1301,9 +1451,9 @@ const questions = [
   {
     q: "You disagree with a teacher's decision. What do you do?",
     opts: [
-      { text: "Speak up then and there \u2014 you're not afraid to challenge authority if you think you're right.", type: "D" },
+      { text: "Speak up then and there — you're not afraid to challenge authority if you think you're right.", type: "D" },
       { text: "Talk to classmates first to see if others feel the same, then approach the teacher as a group.", type: "I" },
-      { text: "Say nothing in the moment \u2014 you don't want to cause tension \u2014 but quietly tell a friend.", type: "S" },
+      { text: "Say nothing in the moment — you don't want to cause tension — but quietly tell a friend.", type: "S" },
       { text: "Write down your reasoning carefully and request a private meeting to present your case logically.", type: "C" }
     ]
   },
@@ -1319,36 +1469,36 @@ const questions = [
   {
     q: "You and a friend are planning a trip together. Who makes the decisions?",
     opts: [
-      { text: "You do most of it \u2014 you have a vision and you move fast.", type: "D" },
-      { text: "It's a collaborative adventure \u2014 you make joint decisions, but you bring the excitement.", type: "I" },
-      { text: "You let your friend lead \u2014 as long as everyone's happy, you're happy too.", type: "S" },
-      { text: "You research every option thoroughly \u2014 hotels, transport, weather, costs \u2014 before deciding anything.", type: "C" }
+      { text: "You do most of it — you have a vision and you move fast.", type: "D" },
+      { text: "It's a collaborative adventure — you make joint decisions, but you bring the excitement.", type: "I" },
+      { text: "You let your friend lead — as long as everyone's happy, you're happy too.", type: "S" },
+      { text: "You research every option thoroughly — hotels, transport, weather, costs — before deciding anything.", type: "C" }
     ]
   },
   {
     q: "In a debate, what role do you naturally play?",
     opts: [
-      { text: "The assertive closer \u2014 you make the winning argument with confidence.", type: "D" },
-      { text: "The crowd-pleaser \u2014 you tell stories and use humour to win people over.", type: "I" },
-      { text: "The bridge-builder \u2014 you acknowledge both sides and try to find truth in the middle.", type: "S" },
-      { text: "The logician \u2014 you dismantle the opponent's argument with facts and evidence.", type: "C" }
+      { text: "The assertive closer — you make the winning argument with confidence.", type: "D" },
+      { text: "The crowd-pleaser — you tell stories and use humour to win people over.", type: "I" },
+      { text: "The bridge-builder — you acknowledge both sides and try to find truth in the middle.", type: "S" },
+      { text: "The logician — you dismantle the opponent's argument with facts and evidence.", type: "C" }
     ]
   },
   {
     q: "How do you react when plans suddenly change?",
     opts: [
-      { text: "Fine with it \u2014 as long as the new direction still gets results.", type: "D" },
-      { text: "Excited \u2014 spontaneity is fun; you adapt quickly and enjoy the change.", type: "I" },
-      { text: "Unsettled \u2014 you prefer to know what's happening so you can be ready.", type: "S" },
-      { text: "Frustrated \u2014 you had a clear system in place and the change disrupts your process.", type: "C" }
+      { text: "Fine with it — as long as the new direction still gets results.", type: "D" },
+      { text: "Excited — spontaneity is fun; you adapt quickly and enjoy the change.", type: "I" },
+      { text: "Unsettled — you prefer to know what's happening so you can be ready.", type: "S" },
+      { text: "Frustrated — you had a clear system in place and the change disrupts your process.", type: "C" }
     ]
   },
   {
     q: "A team member takes credit for your idea in front of others. You:",
     opts: [
-      { text: "Correct the record immediately and clearly \u2014 no one takes credit for your work.", type: "D" },
-      { text: "Feel annoyed but let it go to avoid drama \u2014 you'll remember this, though.", type: "I" },
-      { text: "Say nothing \u2014 confronting it would just create conflict, and that's worse.", type: "S" },
+      { text: "Correct the record immediately and clearly — no one takes credit for your work.", type: "D" },
+      { text: "Feel annoyed but let it go to avoid drama — you'll remember this, though.", type: "I" },
+      { text: "Say nothing — confronting it would just create conflict, and that's worse.", type: "S" },
       { text: "Document what happened and decide later whether to address it with evidence.", type: "C" }
     ]
   },
@@ -1373,18 +1523,18 @@ const questions = [
   {
     q: "When you work with AI tools, you tend to use them:",
     opts: [
-      { text: "To speed up outcomes \u2014 you tell it what you want, review quickly, and move on.", type: "D" },
+      { text: "To speed up outcomes — you tell it what you want, review quickly, and move on.", type: "D" },
       { text: "To brainstorm and generate creative ideas you can remix into something exciting.", type: "I" },
-      { text: "To help you structure your thoughts \u2014 but you always personalise the output carefully.", type: "S" },
-      { text: "To do initial research \u2014 but you always verify the information it gives you.", type: "C" }
+      { text: "To help you structure your thoughts — but you always personalise the output carefully.", type: "S" },
+      { text: "To do initial research — but you always verify the information it gives you.", type: "C" }
     ]
   },
   {
     q: "How do you make big decisions?",
     opts: [
-      { text: "Quickly \u2014 you trust your gut and don't need all the information to act.", type: "D" },
-      { text: "By talking it through with people you trust \u2014 you value their energy and input.", type: "I" },
-      { text: "Slowly and carefully \u2014 you need to feel sure that everyone affected will be okay.", type: "S" },
+      { text: "Quickly — you trust your gut and don't need all the information to act.", type: "D" },
+      { text: "By talking it through with people you trust — you value their energy and input.", type: "I" },
+      { text: "Slowly and carefully — you need to feel sure that everyone affected will be okay.", type: "S" },
       { text: "By mapping out pros and cons, researching thoroughly, and reviewing all data.", type: "C" }
     ]
   },
@@ -1392,7 +1542,7 @@ const questions = [
     q: "You've just failed a test you thought you'd do well in. What do you do next?",
     opts: [
       { text: "Figure out immediately what went wrong and attack the next opportunity harder.", type: "D" },
-      { text: "Vent to a friend or post something funny about it \u2014 humour is your coping mechanism.", type: "I" },
+      { text: "Vent to a friend or post something funny about it — humour is your coping mechanism.", type: "I" },
       { text: "Feel sad and wonder if you've let people down, but quietly push on.", type: "S" },
       { text: "Review every question you got wrong and find the exact gaps in your knowledge.", type: "C" }
     ]
@@ -1409,34 +1559,34 @@ const questions = [
   {
     q: "Which of the following sentences feels most like you?",
     opts: [
-      { text: "\u201CIf you want something done right, sometimes you just have to do it yourself.\u201D", type: "D" },
-      { text: "\u201CLife's too short not to enjoy the journey with the people around you.\u201D", type: "I" },
-      { text: "\u201CI'd rather take a step back than risk hurting someone in the process.\u201D", type: "S" },
-      { text: "\u201CI don't make a move until I understand the full picture.\u201D", type: "C" }
+      { text: "“If you want something done right, sometimes you just have to do it yourself.”", type: "D" },
+      { text: "“Life's too short not to enjoy the journey with the people around you.”", type: "I" },
+      { text: "“I'd rather take a step back than risk hurting someone in the process.”", type: "S" },
+      { text: "“I don't make a move until I understand the full picture.”", type: "C" }
     ]
   },
   {
     q: "Your school is organising a charity event. Which role would you naturally gravitate to?",
     opts: [
-      { text: "Event Director \u2014 you drive the strategy and make sure everything gets done.", type: "D" },
-      { text: "Emcee or Social Media Manager \u2014 you want to be the face of the event.", type: "I" },
-      { text: "Volunteer Coordinator \u2014 you make sure everyone has a role and feels valued.", type: "S" },
-      { text: "Logistics & Finance Lead \u2014 you want to make sure every detail is planned and accounted for.", type: "C" }
+      { text: "Event Director — you drive the strategy and make sure everything gets done.", type: "D" },
+      { text: "Emcee or Social Media Manager — you want to be the face of the event.", type: "I" },
+      { text: "Volunteer Coordinator — you make sure everyone has a role and feels valued.", type: "S" },
+      { text: "Logistics & Finance Lead — you want to make sure every detail is planned and accounted for.", type: "C" }
     ]
   },
   {
     q: "What's your communication style when things get stressful?",
     opts: [
-      { text: "You become more direct and urgent \u2014 there's no time for softness under pressure.", type: "D" },
-      { text: "You reach out more \u2014 you need to talk to people to feel settled.", type: "I" },
+      { text: "You become more direct and urgent — there's no time for softness under pressure.", type: "D" },
+      { text: "You reach out more — you need to talk to people to feel settled.", type: "I" },
       { text: "You go quiet and try to absorb the stress rather than burden others.", type: "S" },
-      { text: "You become more withdrawn and thorough \u2014 you work it out internally before speaking.", type: "C" }
+      { text: "You become more withdrawn and thorough — you work it out internally before speaking.", type: "C" }
     ]
   },
   {
     q: "In an ideal world, what does your future career look like?",
     opts: [
-      { text: "Running your own company or leading a team \u2014 you want autonomy and impact.", type: "D" },
+      { text: "Running your own company or leading a team — you want autonomy and impact.", type: "D" },
       { text: "Working with people in a role that lets you inspire, communicate, or create.", type: "I" },
       { text: "A meaningful role where you support others and contribute to something greater than yourself.", type: "S" },
       { text: "A specialised expert role where your knowledge and precision are deeply valued.", type: "C" }
@@ -1446,18 +1596,18 @@ const questions = [
     q: "A classmate is going through a hard time. What do you do?",
     opts: [
       { text: "Help them identify the problem and come up with a practical plan to fix it.", type: "D" },
-      { text: "Cheer them up \u2014 bring them energy, distract them with something fun.", type: "I" },
-      { text: "Be there quietly \u2014 listen without judgment and let them feel supported.", type: "S" },
+      { text: "Cheer them up — bring them energy, distract them with something fun.", type: "I" },
+      { text: "Be there quietly — listen without judgment and let them feel supported.", type: "S" },
       { text: "Research resources, find relevant information, and give them structured, useful advice.", type: "C" }
     ]
   },
   {
     q: "Which of the following best describes how you'd want to be remembered at school?",
     opts: [
-      { text: "\u201CThe one who made things happen and never backed down from a challenge.\u201D", type: "D" },
-      { text: "\u201CThe one who made everyone smile and brought the energy wherever they went.\u201D", type: "I" },
-      { text: "\u201CThe one who was always there \u2014 kind, reliable, and genuinely cared about others.\u201D", type: "S" },
-      { text: "\u201CThe one who knew their stuff, thought deeply, and never cut corners.\u201D", type: "C" }
+      { text: "“The one who made things happen and never backed down from a challenge.”", type: "D" },
+      { text: "“The one who made everyone smile and brought the energy wherever they went.”", type: "I" },
+      { text: "“The one who was always there — kind, reliable, and genuinely cared about others.”", type: "S" },
+      { text: "“The one who knew their stuff, thought deeply, and never cut corners.”", type: "C" }
     ]
   },
   // --- INTERACTIVE CHALLENGES (31-40) ---
@@ -1475,10 +1625,10 @@ const questions = [
     q: "INSTINCT CHECK: Pick the emoji that draws your eye FIRST. Don't overthink it.",
     challenge: "instinct",
     opts: [
-      { text: "\u26A1 Lightning Bolt", type: "D" },
-      { text: "\u2728 Sparkles", type: "I" },
-      { text: "\u1F331 Seedling", type: "S" },
-      { text: "\u1F9E9 Puzzle Piece", type: "C" }
+      { text: "⚡ Lightning Bolt", type: "D" },
+      { text: "✨ Sparkles", type: "I" },
+      { text: "🌱 Seedling", type: "S" },
+      { text: "🧩 Puzzle Piece", type: "C" }
     ]
   },
   {
@@ -1495,7 +1645,7 @@ const questions = [
     q: "SPEED ROUND: You have 6 seconds! You find a wallet on the ground with $500 in it. What's your FIRST thought?",
     challenge: "timed", timeLimit: 6,
     opts: [
-      { text: "Find the owner fast \u2014 take charge of the situation", type: "D" },
+      { text: "Find the owner fast — take charge of the situation", type: "D" },
       { text: "Post about it on social media to find the owner", type: "I" },
       { text: "Hand it to the nearest authority and hope it gets returned", type: "S" },
       { text: "Check the ID, look up the person, and contact them directly", type: "C" }
@@ -1505,7 +1655,7 @@ const questions = [
     q: "SCENARIO CHALLENGE: Your team's app crashes 10 minutes before a demo to investors. What's your move?",
     challenge: "scenario",
     opts: [
-      { text: "Take over \u2014 switch to a backup plan and present confidently anyway", type: "D" },
+      { text: "Take over — switch to a backup plan and present confidently anyway", type: "D" },
       { text: "Charm the investors with a story while someone fixes it behind the scenes", type: "I" },
       { text: "Stay calm, reassure the team, and suggest everyone takes a breath first", type: "S" },
       { text: "Diagnose the exact error, fix the root cause, even if it means delaying", type: "C" }
@@ -1525,7 +1675,7 @@ const questions = [
     q: "SPEED ROUND: You have 7 seconds! You're lost in a foreign city with a dead phone. What do you do?",
     challenge: "timed", timeLimit: 7,
     opts: [
-      { text: "Walk confidently in a direction \u2014 you'll figure it out", type: "D" },
+      { text: "Walk confidently in a direction — you'll figure it out", type: "D" },
       { text: "Approach a friendly-looking stranger and ask for help with a smile", type: "I" },
       { text: "Find a familiar landmark and wait somewhere safe", type: "S" },
       { text: "Look for a map, street signs, or a transit station with a directory", type: "C" }
@@ -1563,9 +1713,430 @@ const questions = [
   }
 ];
 
+// ===== YOUTH ADVOCACY EDITION (ASEAN youth leadership & coalition building) =====
+const questionsAdvocacy = [
+  {
+    q: "Your community faces an issue you deeply care about. What's your first move as a young advocate?",
+    opts: [
+      { text: "Set a bold goal and rally people to take action immediately.", type: "D" },
+      { text: "Start a conversation online and get people fired up about the cause.", type: "I" },
+      { text: "Listen to those affected first, making sure their voices lead the way.", type: "S" },
+      { text: "Research the issue thoroughly — data, policy, and root causes — before acting.", type: "C" }
+    ]
+  },
+  {
+    q: "Your coalition of youth groups can't agree on a shared campaign direction. How do you respond?",
+    opts: [
+      { text: "Step up and propose a clear decision — momentum matters in advocacy.", type: "D" },
+      { text: "Energise the room with a bold vision everyone can get excited about.", type: "I" },
+      { text: "Find the common ground between groups so no one feels sidelined.", type: "S" },
+      { text: "Suggest evaluating each option against the coalition's shared goals and evidence.", type: "C" }
+    ]
+  },
+  {
+    q: "A policymaker publicly dismisses your youth campaign. What's your reaction?",
+    opts: [
+      { text: "Push back firmly — challenge them with facts and demand to be heard.", type: "D" },
+      { text: "Feel stung, but rally your supporters and turn it into a viral moment.", type: "I" },
+      { text: "Take it to heart, then quietly regroup with your team for support.", type: "S" },
+      { text: "Analyse why they dismissed it and refine your argument with stronger evidence.", type: "C" }
+    ]
+  },
+  {
+    q: "At a regional ASEAN youth forum, where do you naturally gravitate?",
+    opts: [
+      { text: "Leading a breakout group or pitching a resolution to the plenary.", type: "D" },
+      { text: "Networking the room, making friends across every delegation.", type: "I" },
+      { text: "Having deep one-on-one talks with delegates about their communities.", type: "S" },
+      { text: "In the sessions, taking detailed notes and mapping the policy landscape.", type: "C" }
+    ]
+  },
+  {
+    q: "You're invited to deliver the keynote at a youth advocacy summit. How do you feel?",
+    opts: [
+      { text: "Ready — this is your platform to drive real change and lead.", type: "D" },
+      { text: "Excited — you love inspiring a crowd and sparking a movement.", type: "I" },
+      { text: "Nervous, but willing — you'll do it to amplify your community's voice.", type: "S" },
+      { text: "Prepared once you've researched deeply and rehearsed every fact.", type: "C" }
+    ]
+  },
+  {
+    q: "A shy volunteer joins your campaign and seems hesitant to speak up. What do you do?",
+    opts: [
+      { text: "Give them a clear task with responsibility — people grow by doing.", type: "D" },
+      { text: "Welcome them warmly and introduce them to the whole team right away.", type: "I" },
+      { text: "Quietly check in, make them feel safe, and include them at their own pace.", type: "S" },
+      { text: "Observe their strengths first, then match them to a role that fits.", type: "C" }
+    ]
+  },
+  {
+    q: "It's days before a major advocacy event and a key partner drops out. What do you do?",
+    opts: [
+      { text: "Take charge — find a replacement fast and keep the plan moving.", type: "D" },
+      { text: "Reach out to your network and rally new allies with your energy.", type: "I" },
+      { text: "Support the stressed team and offer to take on extra work yourself.", type: "S" },
+      { text: "Reassess the plan systematically and adjust logistics to stay on track.", type: "C" }
+    ]
+  },
+  {
+    q: "Which kind of advocacy work energises you most?",
+    opts: [
+      { text: "Leading a high-stakes negotiation or campaign to win real change.", type: "D" },
+      { text: "Creating a viral movement, rally, or storytelling campaign.", type: "I" },
+      { text: "Grassroots community organising where everyone contributes together.", type: "S" },
+      { text: "Deep policy research, writing position papers, or building frameworks.", type: "C" }
+    ]
+  },
+  {
+    q: "An AI tool drafts a campaign statistic that sounds powerful but you suspect is off. What do you do?",
+    opts: [
+      { text: "If it's roughly right and drives the point, move on — impact matters.", type: "D" },
+      { text: "Share it with the team to see if anyone spots the problem.", type: "I" },
+      { text: "Hesitate to challenge it — what if you've misunderstood?", type: "S" },
+      { text: "Verify it against primary sources before it ever reaches the public.", type: "C" }
+    ]
+  },
+  {
+    q: "In a youth-led organising team, which role do you naturally take?",
+    opts: [
+      { text: "The driver — setting direction and pushing the mission forward.", type: "D" },
+      { text: "The connector — building energy, alliances, and public support.", type: "I" },
+      { text: "The glue — keeping the team united and everyone's morale high.", type: "S" },
+      { text: "The strategist — mapping the plan, risks, and evidence base.", type: "C" }
+    ]
+  },
+  {
+    q: "How do fellow youth advocates describe you?",
+    opts: [
+      { text: "Bold, decisive, and always ready to lead the charge.", type: "D" },
+      { text: "Charismatic, inspiring, and the spark of every movement.", type: "I" },
+      { text: "Grounded, dependable, and the person who holds the team together.", type: "S" },
+      { text: "Sharp, principled, and the one who gets the facts right.", type: "C" }
+    ]
+  },
+  {
+    q: "Your town wants to improve youth mental health support. Your first step is:",
+    opts: [
+      { text: "Identify the biggest gaps and pitch a concrete plan to the town council.", type: "D" },
+      { text: "Launch an awareness campaign to get young people talking openly.", type: "I" },
+      { text: "Ask affected youth what support would actually make them feel safe.", type: "S" },
+      { text: "Gather data on needs, existing services, and evidence-based solutions first.", type: "C" }
+    ]
+  },
+  {
+    q: "You disagree with a decision made by a senior coalition leader. What do you do?",
+    opts: [
+      { text: "Speak up respectfully but directly — you'll challenge it if you're right.", type: "D" },
+      { text: "Gauge how other members feel, then raise it together as a group.", type: "I" },
+      { text: "Stay quiet to keep the peace, but share your concern privately.", type: "S" },
+      { text: "Write up your reasoning with evidence and request a formal discussion.", type: "C" }
+    ]
+  },
+  {
+    q: "What does 'successful advocacy' look like to you?",
+    opts: [
+      { text: "Winning a concrete change — a new policy, law, or measurable outcome.", type: "D" },
+      { text: "A movement full of energised people who believe in the cause.", type: "I" },
+      { text: "Communities feeling genuinely heard, supported, and uplifted.", type: "S" },
+      { text: "A rigorous, well-evidenced case that stands up to any scrutiny.", type: "C" }
+    ]
+  },
+  {
+    q: "Your coalition is planning a cross-border ASEAN youth initiative. Who leads the planning?",
+    opts: [
+      { text: "You do — you have the vision and you move fast to make it real.", type: "D" },
+      { text: "It's collaborative, but you bring the excitement and rally partners.", type: "I" },
+      { text: "You support whoever leads — as long as everyone's aligned and happy.", type: "S" },
+      { text: "You map every detail — stakeholders, logistics, risks — before committing.", type: "C" }
+    ]
+  },
+  {
+    q: "In a public debate on a youth issue, what role do you naturally play?",
+    opts: [
+      { text: "The bold closer who lands the winning argument with conviction.", type: "D" },
+      { text: "The storyteller who wins hearts with lived experience and humour.", type: "I" },
+      { text: "The bridge-builder who finds shared values across both sides.", type: "S" },
+      { text: "The analyst who dismantles weak claims with facts and data.", type: "C" }
+    ]
+  },
+  {
+    q: "Your campaign's strategy suddenly has to change due to new government rules. You:",
+    opts: [
+      { text: "Adapt fast — as long as you still reach the goal, the path can change.", type: "D" },
+      { text: "Get excited — a new angle means a fresh way to inspire people.", type: "I" },
+      { text: "Feel unsettled — you prefer stability and time to adjust the team.", type: "S" },
+      { text: "Feel frustrated — your carefully built plan now needs rebuilding.", type: "C" }
+    ]
+  },
+  {
+    q: "A coalition partner takes public credit for your campaign idea. You:",
+    opts: [
+      { text: "Set the record straight clearly — credit matters for accountability.", type: "D" },
+      { text: "Feel annoyed but let it slide to protect the alliance — for now.", type: "I" },
+      { text: "Say nothing — the cause matters more than who gets the credit.", type: "S" },
+      { text: "Document what happened and decide later how to address it fairly.", type: "C" }
+    ]
+  },
+  {
+    q: "What's your biggest fear in a youth coalition?",
+    opts: [
+      { text: "That the coalition moves too slowly to create real change.", type: "D" },
+      { text: "That momentum and enthusiasm fade and the movement dies out.", type: "I" },
+      { text: "That internal conflict tears the group apart or excludes people.", type: "S" },
+      { text: "That poor research or misinformation undermines your credibility.", type: "C" }
+    ]
+  },
+  {
+    q: "You're launching your movement's social media presence. Your instinct is to:",
+    opts: [
+      { text: "Launch fast, set a content schedule, and track what drives action.", type: "D" },
+      { text: "Make bold, shareable content that sparks conversation and joy.", type: "I" },
+      { text: "Ensure every post reflects the whole community and includes all voices.", type: "S" },
+      { text: "Study what works, define a clear message, and plan a content strategy.", type: "C" }
+    ]
+  },
+  {
+    q: "When you use AI tools in your advocacy work, you tend to use them:",
+    opts: [
+      { text: "To move faster — draft, review quickly, and get to action.", type: "D" },
+      { text: "To brainstorm bold campaign ideas you can make your own.", type: "I" },
+      { text: "To help structure your message — but you always keep it human.", type: "S" },
+      { text: "For initial research — but you always verify before you publish.", type: "C" }
+    ]
+  },
+  {
+    q: "How do you make big strategic decisions for your campaign?",
+    opts: [
+      { text: "Quickly — you trust your instinct and act before the window closes.", type: "D" },
+      { text: "By talking it through with allies whose energy you trust.", type: "I" },
+      { text: "Carefully — you need to know everyone affected will be okay.", type: "S" },
+      { text: "By weighing evidence, mapping pros and cons, and reviewing the data.", type: "C" }
+    ]
+  },
+  {
+    q: "A major campaign push fails to get the response you hoped for. What do you do next?",
+    opts: [
+      { text: "Diagnose what went wrong fast and hit the next opportunity harder.", type: "D" },
+      { text: "Lean on your community, reframe it positively, and re-energise.", type: "I" },
+      { text: "Feel the disappointment, but quietly keep showing up for the cause.", type: "S" },
+      { text: "Review the whole effort methodically to find the exact weak points.", type: "C" }
+    ]
+  },
+  {
+    q: "What would make you most uncomfortable in a coalition setting?",
+    opts: [
+      { text: "Being led by someone with less drive or competence than you.", type: "D" },
+      { text: "Being sidelined or left out of the key conversations.", type: "I" },
+      { text: "Open conflict or tension between coalition members.", type: "S" },
+      { text: "Being pushed to decide without enough information or time.", type: "C" }
+    ]
+  },
+  {
+    q: "Which statement feels most like you as an advocate?",
+    opts: [
+      { text: "“If change is going to happen, someone has to lead — so I will.”", type: "D" },
+      { text: "“Movements are built on people, energy, and belief.”", type: "I" },
+      { text: "“I'd rather lift others up than stand in the spotlight alone.”", type: "S" },
+      { text: "“I won't make the ask until I fully understand the issue.”", type: "C" }
+    ]
+  },
+  {
+    q: "Your coalition is running a regional advocacy campaign. Which role do you take?",
+    opts: [
+      { text: "Campaign Director — you drive strategy and hold everyone to the goal.", type: "D" },
+      { text: "Spokesperson or Comms Lead — you're the public voice of the movement.", type: "I" },
+      { text: "Community Coordinator — you make sure every group feels valued.", type: "S" },
+      { text: "Policy & Research Lead — you build the evidence base behind every ask.", type: "C" }
+    ]
+  },
+  {
+    q: "Under pressure during a high-stakes campaign, your communication style becomes:",
+    opts: [
+      { text: "More direct and urgent — there's no time to soften the message.", type: "D" },
+      { text: "More outward — you reach out to allies to stay energised.", type: "I" },
+      { text: "Quieter — you absorb the stress rather than burden the team.", type: "S" },
+      { text: "More reserved and thorough — you work it out before you speak.", type: "C" }
+    ]
+  },
+  {
+    q: "In an ideal future, what does your role in society look like?",
+    opts: [
+      { text: "Leading an organisation or movement that creates lasting change.", type: "D" },
+      { text: "A public role where you inspire, mobilise, and connect people.", type: "I" },
+      { text: "A grounded role serving communities and lifting up those in need.", type: "S" },
+      { text: "An expert role shaping policy through knowledge and rigour.", type: "C" }
+    ]
+  },
+  {
+    q: "A peer in your movement is burning out and struggling. What do you do?",
+    opts: [
+      { text: "Help them find a practical plan to lighten their load and refocus.", type: "D" },
+      { text: "Lift their spirits — remind them why the cause matters and have fun.", type: "I" },
+      { text: "Simply be there — listen, support, and let them rest without judgment.", type: "S" },
+      { text: "Find them resources and structured, useful advice to recover well.", type: "C" }
+    ]
+  },
+  {
+    q: "How would you want to be remembered as a young advocate?",
+    opts: [
+      { text: "“The one who made change happen and never backed down.”", type: "D" },
+      { text: "“The one who inspired a generation and brought people together.”", type: "I" },
+      { text: "“The one who always showed up — caring, loyal, and dependable.”", type: "S" },
+      { text: "“The one who knew the issues deeply and got the facts right.”", type: "C" }
+    ]
+  },
+  // --- INTERACTIVE CHALLENGES (31-40) ---
+  {
+    q: "SPEED ROUND: You have 8 seconds! A protest you're leading suddenly gets media attention. What do you do FIRST?",
+    challenge: "timed", timeLimit: 8,
+    opts: [
+      { text: "Step forward and deliver your key demand clearly", type: "D" },
+      { text: "Grab the mic and rally the crowd with energy", type: "I" },
+      { text: "Make sure everyone stays safe and united first", type: "S" },
+      { text: "Check your facts before speaking to the press", type: "C" }
+    ]
+  },
+  {
+    q: "INSTINCT CHECK: Pick the word that fires you up FIRST. Don't overthink it.",
+    challenge: "instinct",
+    opts: [
+      { text: "✊ JUSTICE", type: "D" },
+      { text: "🔥 MOVEMENT", type: "I" },
+      { text: "🤝 SOLIDARITY", type: "S" },
+      { text: "📊 EVIDENCE", type: "C" }
+    ]
+  },
+  {
+    q: "PRIORITY CHALLENGE: You have ONE hour before meeting a Member of Parliament. What do you do first?",
+    challenge: "priority",
+    opts: [
+      { text: "Rehearse your three key asks and your strongest opening", type: "D" },
+      { text: "Prepare a powerful personal story to make it memorable", type: "I" },
+      { text: "Check in with your community reps so you represent them well", type: "S" },
+      { text: "Fact-check every figure and prepare a clean briefing note", type: "C" }
+    ]
+  },
+  {
+    q: "SPEED ROUND: You have 6 seconds! A rival group spreads misinformation about your campaign. First thought?",
+    challenge: "timed", timeLimit: 6,
+    opts: [
+      { text: "Respond fast and set the record straight publicly", type: "D" },
+      { text: "Rally your supporters to drown it out with the truth", type: "I" },
+      { text: "Stay calm and protect the team from panic", type: "S" },
+      { text: "Gather evidence and craft a precise, factual rebuttal", type: "C" }
+    ]
+  },
+  {
+    q: "SCENARIO CHALLENGE: Your coalition's funding is cut days before a regional summit. Your move?",
+    challenge: "scenario",
+    opts: [
+      { text: "Take charge — find new funding or a leaner plan, and press on", type: "D" },
+      { text: "Rally the network and crowd-raise with an inspiring appeal", type: "I" },
+      { text: "Reassure the team, then figure out how everyone can pitch in", type: "S" },
+      { text: "Rebuild the budget carefully and prioritise what truly matters", type: "C" }
+    ]
+  },
+  {
+    q: "WORD ASSOCIATION: Which word JUMPS out at you first?",
+    challenge: "instinct",
+    opts: [
+      { text: "LEAD", type: "D" },
+      { text: "UNITE", type: "I" },
+      { text: "SERVE", type: "S" },
+      { text: "UNDERSTAND", type: "C" }
+    ]
+  },
+  {
+    q: "SPEED ROUND: You have 7 seconds! You're handed the mic at a rally with no notes. What do you do?",
+    challenge: "timed", timeLimit: 7,
+    opts: [
+      { text: "Deliver a bold, direct call to action", type: "D" },
+      { text: "Fire up the crowd with passion and a chant", type: "I" },
+      { text: "Speak from the heart about the people you serve", type: "S" },
+      { text: "Share a sharp, well-reasoned point that lands", type: "C" }
+    ]
+  },
+  {
+    q: "DILEMMA: You can only champion ONE cause this year. Which do you choose?",
+    challenge: "scenario",
+    opts: [
+      { text: "The one with the biggest, most ambitious impact", type: "D" },
+      { text: "The one that would spark the most powerful public movement", type: "I" },
+      { text: "The one closest to your community's everyday struggles", type: "S" },
+      { text: "The one with the strongest evidence and clearest policy path", type: "C" }
+    ]
+  },
+  {
+    q: "SPEED ROUND: You have 5 seconds! Pick your advocacy superpower. GO!",
+    challenge: "timed", timeLimit: 5,
+    opts: [
+      { text: "Unshakeable courage", type: "D" },
+      { text: "Magnetic influence", type: "I" },
+      { text: "Deep empathy", type: "S" },
+      { text: "Flawless insight", type: "C" }
+    ]
+  },
+  {
+    q: "FINAL CHALLENGE: A future generation asks what changed the world. You say ONE word:",
+    challenge: "instinct",
+    opts: [
+      { text: "Courage", type: "D" },
+      { text: "Voice", type: "I" },
+      { text: "Community", type: "S" },
+      { text: "Truth", type: "C" }
+    ]
+  }
+];
+
+// Edition state
+let edition = 'youth';
+let questions = questionsYouth;
 let current = 0;
-const answers = new Array(questions.length).fill(null);
+let answers = [];
 let timerInterval = null;
+
+function selectEdition(ed) {
+  edition = ed;
+  questions = (ed === 'advocacy') ? questionsAdvocacy : questionsYouth;
+  answers = new Array(questions.length).fill(null);
+  current = 0;
+
+  const body = document.body;
+  const h1 = document.querySelector('.logo-area h1');
+  const subtitle = document.querySelector('.logo-area .subtitle');
+  const startIntro = document.getElementById('start-intro');
+
+  if (ed === 'advocacy') {
+    body.classList.add('advocacy');
+    h1.textContent = 'Chroma';
+    subtitle.textContent = 'Youth Advocacy Edition';
+    startIntro.innerHTML =
+      '<p>Great movements begin with self-awareness. Before you lead a coalition or launch a campaign, discover the advocacy style that comes most naturally to you.</p>' +
+      '<p>There are no right or wrong answers &mdash; just pick the option that feels most like you.</p>';
+  } else {
+    body.classList.remove('advocacy');
+    h1.textContent = 'Chroma';
+    subtitle.textContent = 'Colour Personality Engine';
+    startIntro.innerHTML =
+      '<p>In Korea, many people take a personal colour test to discover which colours best match their style and identity. But what if we could also discover our personality colour?</p>' +
+      '<p>There are no right or wrong answers &mdash; just pick the option that feels most like you.</p>';
+  }
+
+  document.getElementById('menu-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToMenu() {
+  ['results-screen','profile-screen','wheel-screen','blend-screen'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  ['start-screen','theory1-screen','theory2-screen','quiz-screen'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.getElementById('menu-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 function startQuiz() {
   document.getElementById('start-screen').classList.add('hidden');
@@ -1713,7 +2284,7 @@ const profiles = {
     typeName: 'Dominance',
     colourName: 'Red Flame',
     hex: '#E63946',
-    psychology: 'Red is universally associated with boldness, urgency, power, and action. Research by Elliot & Maier (2012) in Current Directions in Psychological Science confirms red signals dominance and competitive drive. It activates the amygdala and increases arousal \u2014 reflecting the D-type\'s decisive, fast-moving energy.',
+    psychology: 'Red is universally associated with boldness, urgency, power, and action. Research by Elliot & Maier (2012) in Current Directions in Psychological Science confirms red signals dominance and competitive drive. It activates the amygdala and increases arousal — reflecting the D-type\'s decisive, fast-moving energy.',
     table: [
       ['Primary Drive', 'Results, control, challenge'],
       ['Motivated By', 'Winning, authority, variety, direct answers'],
@@ -1723,7 +2294,7 @@ const profiles = {
       ['Greatest Strength', 'Gets things done; drives progress'],
       ['Blind Spot', 'May overlook people\'s feelings; too blunt']
     ],
-    ai: 'D-types will thrive as orchestrators \u2014 directing AI tools toward goal achievement. Their human edge lies in vision-setting, risk tolerance, and decisive action under ambiguity \u2014 things AI cannot replicate. They must, however, learn to slow down and build genuine relationships.',
+    ai: 'D-types will thrive as orchestrators — directing AI tools toward goal achievement. Their human edge lies in vision-setting, risk tolerance, and decisive action under ambiguity — things AI cannot replicate. They must, however, learn to slow down and build genuine relationships.',
     famous: 'Steve Jobs, Oprah Winfrey (in leadership mode), Cristiano Ronaldo',
     teams: [
       ['Strength', 'Pushes for results; breaks through inertia'],
@@ -1735,7 +2306,7 @@ const profiles = {
     typeName: 'Influence',
     colourName: 'Solar Yellow',
     hex: '#FFD60A',
-    psychology: 'Yellow is the colour of optimism, energy, and social warmth. Research from the Institute for Color Research shows yellow is the first colour the human eye processes \u2014 reflecting the I-type\'s desire to be noticed and to connect. Yellow evokes creativity, enthusiasm, and positivity \u2014 all hallmarks of the Influence style.',
+    psychology: 'Yellow is the colour of optimism, energy, and social warmth. Research from the Institute for Color Research shows yellow is the first colour the human eye processes — reflecting the I-type\'s desire to be noticed and to connect. Yellow evokes creativity, enthusiasm, and positivity — all hallmarks of the Influence style.',
     table: [
       ['Primary Drive', 'Social connection, recognition, enthusiasm'],
       ['Motivated By', 'Praise, popularity, relationships, fun'],
@@ -1757,7 +2328,7 @@ const profiles = {
     typeName: 'Steadiness',
     colourName: 'Sage Green',
     hex: '#52B788',
-    psychology: 'Green evokes stability, harmony, growth, and trust. In colour psychology, green is the easiest colour on the eye and is associated with balance and calm \u2014 directly mirroring the S-type\'s steady, reliable, and supportive nature. Research by Valdez & Mehrabian (1994) links green with feelings of calm and contentment.',
+    psychology: 'Green evokes stability, harmony, growth, and trust. In colour psychology, green is the easiest colour on the eye and is associated with balance and calm — directly mirroring the S-type\'s steady, reliable, and supportive nature. Research by Valdez & Mehrabian (1994) links green with feelings of calm and contentment.',
     table: [
       ['Primary Drive', 'Stability, harmony, sincere relationships'],
       ['Motivated By', 'Security, appreciation, consistent environment'],
@@ -1767,7 +2338,7 @@ const profiles = {
       ['Greatest Strength', 'Creates psychological safety; most loyal team member'],
       ['Blind Spot', 'Resists necessary change; struggles to say no']
     ],
-    ai: 'S-types are the emotional anchors of future teams. As organisations integrate AI, the need for empathetic leadership, conflict mediation, and team cohesion grows \u2014 not diminishes. S-types who develop confidence in their voice will be irreplaceable.',
+    ai: 'S-types are the emotional anchors of future teams. As organisations integrate AI, the need for empathetic leadership, conflict mediation, and team cohesion grows — not diminishes. S-types who develop confidence in their voice will be irreplaceable.',
     famous: 'Mr Rogers, Michelle Obama (in nurturing mode), Mother Teresa',
     teams: [
       ['Strength', 'Creates psychological safety; keeps the team together'],
@@ -1779,7 +2350,7 @@ const profiles = {
     typeName: 'Conscientiousness',
     colourName: 'Ocean Blue',
     hex: '#023E8A',
-    psychology: 'Blue is the colour most associated with trust, intellect, precision, and depth. Research by Mehrabian (1996) shows blue promotes concentration and careful thinking. It is used globally in professional, scientific, and analytical contexts \u2014 perfectly reflecting the C-type\'s standards-driven, methodical approach.',
+    psychology: 'Blue is the colour most associated with trust, intellect, precision, and depth. Research by Mehrabian (1996) shows blue promotes concentration and careful thinking. It is used globally in professional, scientific, and analytical contexts — perfectly reflecting the C-type\'s standards-driven, methodical approach.',
     table: [
       ['Primary Drive', 'Accuracy, quality, competence'],
       ['Motivated By', 'Standards, logic, research, clear expectations'],
@@ -1789,7 +2360,7 @@ const profiles = {
       ['Greatest Strength', 'Produces highest-quality work; catches errors others miss'],
       ['Blind Spot', 'Overthinks; struggles with "good enough"']
     ],
-    ai: 'C-types are natural AI architects. Their analytical mindset, love of systems thinking, and insistence on accuracy make them exceptional at evaluating AI outputs, identifying biases, and building robust processes. Their human edge: ethical judgment, contextual nuance, and creative problem-framing \u2014 areas where AI still struggles.',
+    ai: 'C-types are natural AI architects. Their analytical mindset, love of systems thinking, and insistence on accuracy make them exceptional at evaluating AI outputs, identifying biases, and building robust processes. Their human edge: ethical judgment, contextual nuance, and creative problem-framing — areas where AI still struggles.',
     famous: 'Albert Einstein, Marie Curie, Bill Gates (in analytical mode)',
     teams: [
       ['Strength', 'Sets the quality bar; plans thoroughly'],
@@ -1867,8 +2438,8 @@ function restartQuiz() {
   document.getElementById('profile-screen').style.display = 'none';
   document.getElementById('wheel-screen').style.display = 'none';
   document.getElementById('blend-screen').style.display = 'none';
-  document.getElementById('start-screen').classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('quiz-screen').classList.add('hidden');
+  backToMenu();
 }
 </script>
 </body>
